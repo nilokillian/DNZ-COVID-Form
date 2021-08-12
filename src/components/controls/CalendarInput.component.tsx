@@ -26,7 +26,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
       if (selectedDate.toLocaleDateString() !== value) {
         onChange(id, selectedDate.toLocaleDateString());
       }
-    }, [selectedDate, id, onChange]);
+    }, [selectedDate, id, onChange, value]);
 
     return (
       <div
