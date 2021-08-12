@@ -155,7 +155,7 @@ export const Form: React.FC<IFormProps> = () => {
             label={`${
               formInputs.secondVaccine === "yes" ? "7" : "8"
             }.What date did you have your ${
-              formInputs.secondVaccine == "yes" ? "second" : "first"
+              formInputs.secondVaccine === "yes" ? "second" : "first"
             } COVID-19 vaccine?`}
             value={formInputs.firstVaccineDate}
             required
