@@ -28,7 +28,7 @@ export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
 
   return (
     <div
-      className="radio"
+      className="radioControl"
       style={{
         padding: "20px 0px 30px",
       }}
