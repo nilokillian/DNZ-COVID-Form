@@ -19,14 +19,14 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
       (date: Date, selectedDateRangeArray?: Date[] | undefined): void => {
         setSelectedDate(date);
       },
-      [value]
+      []
     );
 
     React.useEffect(() => {
       if (selectedDate.toLocaleDateString() !== value) {
         onChange(id, selectedDate.toLocaleDateString());
       }
-    }, [selectedDate]);
+    }, [selectedDate, id, onChange]);
 
     return (
       <div
