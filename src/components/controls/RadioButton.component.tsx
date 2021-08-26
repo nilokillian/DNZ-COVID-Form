@@ -10,6 +10,7 @@ export interface IRadioButtonControlProps {
   image?: string;
   onChange: (id: string, value: string) => void;
   disabled?: boolean;
+  required?: boolean;
 }
 
 export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
@@ -21,6 +22,7 @@ export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
   withImage,
   image,
   disabled,
+  required,
 }) => {
   const onRadioChange = (
     ev?: FormEvent<HTMLElement | HTMLInputElement> | undefined,
@@ -58,6 +60,7 @@ export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
         label={label}
         // styles={{ label: { fontSize: 13 } }}
         styles={{ root: {} }}
+        required={required}
       />
     </div>
   );

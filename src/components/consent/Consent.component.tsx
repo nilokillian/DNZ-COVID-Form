@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { DefaultButton, MessageBarType } from "@fluentui/react";
-import { MessageBarContainer } from "../Message.component";
+import { MessageBarContainer } from "../message/Message.component";
 
 import "./consent.css";
 

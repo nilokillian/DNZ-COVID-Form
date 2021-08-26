@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import "./cameraStyles.css";
 import Webcam from "react-webcam";
+import { DefaultButton } from "@fluentui/react";
 
-// const WebcamComponent = () => <Webcam />;
 const videoConstraints = {
   width: 220,
   height: 200,
@@ -21,10 +21,20 @@ export const WebcamCapture = () => {
     }
   }, [webcamRef]);
 
+  const getBtntext = () => (image ? "Retake Image" : "Capture");
+
+  const onImageClick = () => {
+    if (image) {
+      setImage("");
+    } else {
+      capture();
+    }
+  };
+
   return (
     <div className="webcam-container">
       <div className="webcam-img">
-        {image === "" ? (
+        {!image ? (
           <Webcam
             audio={false}
             height={200}
@@ -37,28 +47,12 @@ export const WebcamCapture = () => {
           <img src={image} alt="img" />
         )}
       </div>
-      <div>
-        {image !== "" ? (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setImage("");
-            }}
-            className="webcam-btn"
-          >
-            Retake Image
-          </button>
-        ) : (
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              capture();
-            }}
-            className="webcam-btn"
-          >
-            Capture
-          </button>
-        )}
+      <div className="buton-container">
+        <DefaultButton
+          text={getBtntext()}
+          onClick={onImageClick}
+          allowDisabledFocus
+        />
       </div>
     </div>
   );

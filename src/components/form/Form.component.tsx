@@ -3,14 +3,24 @@ import {
   Label,
   PrimaryButton,
   Stack,
+  ActionButton,
+  IIconProps,
+  Separator,
 } from "@fluentui/react";
 import React from "react";
 import { CalendarInput } from "../controls/CalendarInput.component";
 import { RadioButtonControl } from "../controls/RadioButton.component";
 import { TextInputControl } from "../controls/TextInput.component";
 import { WebcamCapture } from "../controls/Webcam.component";
-import "./form.css";
+import { FileInput } from "../controls/FileInput";
+import { ModalWindow } from "../modal/Modal.component";
+
 import injectionIcon from "../../injection.svg";
+import "./form.css";
+
+const cameraIcon: IIconProps = { iconName: "Camera" };
+const addCommentIcon: IIconProps = { iconName: "Comment" };
+const attachIcon: IIconProps = { iconName: "Attach" };
 
 const businessUnits: IChoiceGroupOption[] = [
   {
@@ -62,6 +72,11 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
     vaccineInfo: "",
   });
 
+  const [cameraWindow, setCameraWindow] = React.useState<boolean>(false);
+  const [commentWindow, setCommentWindow] = React.useState<boolean>(false);
+  const [attachmentWindow, setAttachmentWindow] =
+    React.useState<boolean>(false);
+
   const submitForm = (e: any) => {
     e.preventDefault();
     setFormInputs({
@@ -88,9 +103,10 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
       <Label required styles={{ root: { textAlign: "right" } }}>
         Required
       </Label>
+
       <Stack
         verticalAlign="start"
-        styles={{ root: { width: "50%", paddingLeft: 20, minHeight: 300 } }}
+        styles={{ root: { width: "70%", paddingLeft: 20, minHeight: 300 } }}
       >
         <TextInputControl
           id="firstName"
@@ -108,7 +124,6 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
           required
           disabled={!consent}
         />
-
         <TextInputControl
           id="employeeNumber"
           label="Employee number"
@@ -124,12 +139,14 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
           onChange={onInputChange}
           options={businessUnits}
           disabled={!consent}
+          required
         />
         <RadioButtonControl
           id="vaccineStatus"
           label="What is your vaccine status ?"
           value={formInputs.vaccineStatus}
           disabled={!consent}
+          required
           onChange={(id, value) => {
             setFormInputs({
               ...formInputs,
@@ -151,13 +168,13 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
             withImage={true}
             image={injectionIcon}
             disabled={!consent}
+            required
             options={[
               { key: "1_shot", text: "One shot" },
               { key: "2_shot", text: "Two shots" },
             ]}
           />
         )}
-
         {formInputs.vaccineStatus === "STARTED" && (
           <>
             <CalendarInput
@@ -167,28 +184,91 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
               label="First vaccine date"
               required
             />
-            <CalendarInput
-              id="secondVaccineDate"
-              value={formInputs.secondVaccineDate}
-              onChange={onInputChange}
-              label="Second vaccine date"
-              required
-            />
+            {formInputs.vaccineShotsCount === "2_shot" && (
+              <CalendarInput
+                id="secondVaccineDate"
+                value={formInputs.secondVaccineDate}
+                onChange={onInputChange}
+                label="Second vaccine date"
+                required
+              />
+            )}
           </>
         )}
 
-        <TextInputControl
-          id="vaccineInfo"
-          label="Vaccine info"
-          value={formInputs.vaccineInfo}
-          onChange={onInputChange}
-          disabled={!consent}
-          multipleLine={true}
-          rows={4}
-        />
+        <Separator />
+        <Stack horizontal wrap>
+          <ActionButton
+            iconProps={cameraIcon}
+            allowDisabledFocus
+            disabled={!consent}
+            onClick={() => setCameraWindow(true)}
+            styles={{
+              icon: { fontSize: 30 },
+              root: { paddingTop: 10, paddingBottom: 10 },
+            }}
+          >
+            Take a photo
+          </ActionButton>
+          <ActionButton
+            iconProps={addCommentIcon}
+            allowDisabledFocus
+            disabled={!consent}
+            onClick={() => setCommentWindow(true)}
+            styles={{
+              icon: { fontSize: 30 },
+              root: { paddingTop: 10, paddingBottom: 10 },
+            }}
+          >
+            Add comment
+          </ActionButton>
 
-        <WebcamCapture />
-
+          <ActionButton
+            iconProps={attachIcon}
+            allowDisabledFocus
+            disabled={!consent}
+            onClick={() => setAttachmentWindow(true)}
+            styles={{
+              icon: { fontSize: 30 },
+              root: { paddingTop: 10, paddingBottom: 10 },
+            }}
+          >
+            Add attachment
+          </ActionButton>
+        </Stack>
+        <Separator />
+        <ModalWindow
+          isModalOpen={cameraWindow}
+          hideModal={() => setCameraWindow(false)}
+        >
+          <WebcamCapture />
+        </ModalWindow>
+        <ModalWindow
+          isModalOpen={commentWindow}
+          hideModal={() => setCommentWindow(false)}
+        >
+          <Label>
+            Free text / to enter vaccine info (Pfizer, Astrazeneca etc)
+          </Label>
+          <textarea
+            id="vaccineInfo"
+            cols={40}
+            rows={5}
+            value={formInputs.vaccineInfo}
+            onChange={(e) => onInputChange("vaccineInfo", e.target.value)}
+          />
+        </ModalWindow>
+        <ModalWindow
+          isModalOpen={attachmentWindow}
+          hideModal={() => setAttachmentWindow(false)}
+        >
+          <FileInput
+            id="attachment"
+            inputLabel="Attach file"
+            onChange={onInputChange}
+            name="attachment"
+          />
+        </ModalWindow>
         <PrimaryButton
           text="Submit"
           disabled={!consent}
@@ -199,6 +279,8 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
               width: 200,
               height: 40,
               borderColor: "#5bc2e7",
+              marginTop: 50,
+              marginBottom: 30,
             },
           }}
         />
