@@ -1,7 +1,7 @@
 .formContainer {
   background-color: #ffffff61;
   box-shadow: 0 0 11px rgb(0 0 0 / 12%);
-  max-width: 850px;
+  max-width: 700px;
   box-sizing: border-box;
   display: block;
   position: relative;
@@ -10,22 +10,9 @@
 
 .formTitle {
   position: relative;
-  padding: 50px;
-  background: #5bc2e7;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  display: flex;
-  justify-content: center;
-  /* align-self: center;    <---- REMOVE */
-  align-items: center; /* <---- NEW    */
-
-  height: 20%;
+  background: #000000;
 }
 
-.formBody {
-  padding: 30px 100px 70px;
-}
-.formHeading {
-  font-size: 38px;
-  color: #ffffff;
-}
+/* .formHeading {
+  width: 60%;
+} */

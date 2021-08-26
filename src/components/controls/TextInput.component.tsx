@@ -4,9 +4,12 @@ import { TextField } from "@fluentui/react";
 export interface ITextInputControlProps {
   id: string;
   label: string;
-  value: string;
-  required: boolean;
+  disabled: boolean;
+  value: string | undefined;
+  required?: boolean | undefined;
   onChange: (id: string, value: string) => void;
+  multipleLine?: boolean | undefined;
+  rows?: number | undefined;
 }
 
 export const TextInputControl: React.FC<ITextInputControlProps> = ({
@@ -15,20 +18,37 @@ export const TextInputControl: React.FC<ITextInputControlProps> = ({
   value,
   required,
   onChange,
+  disabled,
+  multipleLine,
+  rows,
 }) => {
   return (
     <div
       className="textInput"
       style={{
-        padding: "20px 0px 30px",
+        padding: "10px 0px 5px",
       }}
     >
-      <TextField
-        required={required}
-        label={label}
-        value={value}
-        onChange={(e) => onChange(id, (e.target as any).value)}
-      />
+      {multipleLine ? (
+        <TextField
+          required={required}
+          disabled={disabled}
+          label={label}
+          value={value}
+          onChange={(e) => onChange(id, (e.target as any).value)}
+          multiple={multipleLine}
+          rows={rows}
+          resizable={multipleLine}
+        />
+      ) : (
+        <TextField
+          required={required}
+          disabled={disabled}
+          label={label}
+          value={value}
+          onChange={(e) => onChange(id, (e.target as any).value)}
+        />
+      )}
     </div>
   );
 };

@@ -6,7 +6,10 @@ export interface IRadioButtonControlProps {
   label: string;
   options: IChoiceGroupOption[];
   value: string;
+  withImage?: boolean;
+  image?: string;
   onChange: (id: string, value: string) => void;
+  disabled?: boolean;
 }
 
 export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
@@ -15,6 +18,9 @@ export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
   value,
   options,
   onChange,
+  withImage,
+  image,
+  disabled,
 }) => {
   const onRadioChange = (
     ev?: FormEvent<HTMLElement | HTMLInputElement> | undefined,
@@ -26,18 +32,32 @@ export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
     }
   };
 
+  const composeOptions = (
+    optionsProps: IChoiceGroupOption[]
+  ): IChoiceGroupOption[] =>
+    optionsProps.map((option) => ({
+      ...option,
+      imageSrc: image,
+      imageAlt: option.key,
+      selectedImageSrc: image,
+      imageSize: { width: 22, height: 22 },
+    }));
+
   return (
     <div
       className="radioControl"
       style={{
-        padding: "20px 0px 30px",
+        padding: "10px 0px 5px",
       }}
     >
       <ChoiceGroup
+        disabled={disabled}
         selectedKey={value}
-        options={options}
+        options={withImage ? composeOptions(options) : options}
         onChange={onRadioChange}
         label={label}
+        // styles={{ label: { fontSize: 13 } }}
+        styles={{ root: {} }}
       />
     </div>
   );

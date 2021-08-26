@@ -3,30 +3,19 @@
   height: 100%;
   overflow: auto;
   padding-top: 50px;
-  width: 100%;
   display: flex;
   flex-flow: column;
-  padding-left: calc(50% - 425px);
+  padding-left: calc(50% - 325px);
 }
 
-/* .App-logo {
-  height: 40vmin;
-  pointer-events: none;
-} */
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+.container {
+  background-color: #ffffff61;
+  box-shadow: 0 0 11px rgb(0 0 0 / 12%);
+  max-width: 700px;
+  box-sizing: border-box;
+  display: block;
+  position: relative;
+  text-align: left;
 }
 
 @keyframes App-logo-spin {

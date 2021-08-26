@@ -2,15 +2,15 @@ import {
   IChoiceGroupOption,
   Label,
   PrimaryButton,
-  Image,
+  Stack,
 } from "@fluentui/react";
 import React from "react";
 import { CalendarInput } from "../controls/CalendarInput.component";
 import { RadioButtonControl } from "../controls/RadioButton.component";
 import { TextInputControl } from "../controls/TextInput.component";
-import logo from "../../downer.png";
-
+import { WebcamCapture } from "../controls/Webcam.component";
 import "./form.css";
+import injectionIcon from "../../injection.svg";
 
 const businessUnits: IChoiceGroupOption[] = [
   {
@@ -24,31 +24,42 @@ const businessUnits: IChoiceGroupOption[] = [
   { key: "tasmania", text: "Tasmania" },
 ];
 
+// export enum VaccineStatus {
+//   AWAITING = "Awaiting booking",
+//   STARTED = "Started",
+// }
+
 export interface IForm {
   firstName: string;
   lastName: string;
-  hasEmployeeNumber: string;
   employeeNumber: string;
   businessUnit: string;
-  secondVaccine: string;
+  vaccineStatus: string;
   secondVaccineDate: string;
-  firstVaccine: string;
   firstVaccineDate: string;
+  vaccineShotsCount: string;
+  photo?: string;
+  attachment?: string;
+  vaccineInfo?: string;
 }
 
-export interface IFormProps {}
+export interface IFormProps {
+  consent: boolean;
+}
 
-export const Form: React.FC<IFormProps> = () => {
+export const Form: React.FC<IFormProps> = ({ consent }) => {
   const [formInputs, setFormInputs] = React.useState<IForm>({
     firstName: "",
     lastName: "",
-    hasEmployeeNumber: "",
     employeeNumber: "",
     businessUnit: "",
-    secondVaccine: "",
     secondVaccineDate: "",
-    firstVaccine: "",
     firstVaccineDate: "",
+    vaccineStatus: "AWAITING",
+    vaccineShotsCount: "",
+    photo: "",
+    attachment: "",
+    vaccineInfo: "",
   });
 
   const submitForm = (e: any) => {
@@ -56,13 +67,15 @@ export const Form: React.FC<IFormProps> = () => {
     setFormInputs({
       firstName: "",
       lastName: "",
-      hasEmployeeNumber: "",
       employeeNumber: "",
       businessUnit: "",
-      secondVaccine: "",
       secondVaccineDate: "",
-      firstVaccine: "",
       firstVaccineDate: "",
+      vaccineShotsCount: "",
+      vaccineStatus: "AWAITING",
+      photo: "",
+      attachment: "",
+      vaccineInfo: "",
     });
   };
 
@@ -71,100 +84,114 @@ export const Form: React.FC<IFormProps> = () => {
   };
 
   return (
-    <div className="formContainer">
-      <div className="formTitle">
-        <Image
-          src={logo}
-          styles={{
-            image: {
-              width: 200,
-            },
-          }}
-        />
-        <div className="formHeading">
-          <span> Codid-19 Vaccine Tracker</span>
-        </div>
-      </div>
-      <form className="formBody" onSubmit={submitForm}>
-        <Label required>Required</Label>
+    <form className="formBody" onSubmit={submitForm}>
+      <Label required styles={{ root: { textAlign: "right" } }}>
+        Required
+      </Label>
+      <Stack
+        verticalAlign="start"
+        styles={{ root: { width: "50%", paddingLeft: 20, minHeight: 300 } }}
+      >
         <TextInputControl
           id="firstName"
-          label="1.First Name"
+          label="First name"
           value={formInputs.firstName}
           onChange={onInputChange}
           required
+          disabled={!consent}
         />
         <TextInputControl
           id="lastName"
-          label="2.last Name"
+          label="Last name"
           value={formInputs.lastName}
           onChange={onInputChange}
           required
+          disabled={!consent}
         />
-        <RadioButtonControl
-          id="hasEmployeeNumber"
-          label="3.Do you have an employee number?"
-          value={formInputs.hasEmployeeNumber}
-          onChange={onInputChange}
-          options={[
-            { key: "yes", text: "Yes" },
-            { key: "no", text: "No" },
-          ]}
-        />
+
         <TextInputControl
           id="employeeNumber"
-          label="4.Employee Number"
+          label="Employee number"
           value={formInputs.employeeNumber}
           onChange={onInputChange}
-          required={!formInputs.hasEmployeeNumber}
+          required
+          disabled={!consent}
         />
         <RadioButtonControl
           id="businessUnit"
-          label="5.What is your Business Unit?"
+          label="What is your Business Unit?"
           value={formInputs.businessUnit}
           onChange={onInputChange}
           options={businessUnits}
+          disabled={!consent}
         />
         <RadioButtonControl
-          id="secondVaccine"
-          label="6.Have you had your second COVID-19 vaccine?"
-          value={formInputs.secondVaccine}
-          onChange={onInputChange}
+          id="vaccineStatus"
+          label="What is your vaccine status ?"
+          value={formInputs.vaccineStatus}
+          disabled={!consent}
+          onChange={(id, value) => {
+            setFormInputs({
+              ...formInputs,
+              [id]: value,
+              vaccineShotsCount: "1_shot",
+            });
+          }}
           options={[
-            { key: "yes", text: "Yes" },
-            { key: "no", text: "No" },
+            { key: "AWAITING", text: "Awaiting" },
+            { key: "STARTED", text: "Started" },
           ]}
         />
-        {formInputs.secondVaccine === "no" && (
+        {formInputs.vaccineStatus === "STARTED" && (
           <RadioButtonControl
-            id="firstVaccine"
-            label="7.Have you had your first COVID-19 vaccine?"
-            value={formInputs.firstVaccine}
+            id="vaccineShotsCount"
+            label="How many shots do you have ?"
+            value={formInputs.vaccineShotsCount}
             onChange={onInputChange}
+            withImage={true}
+            image={injectionIcon}
+            disabled={!consent}
             options={[
-              { key: "yes", text: "Yes" },
-              { key: "no", text: "No" },
+              { key: "1_shot", text: "One shot" },
+              { key: "2_shot", text: "Two shots" },
             ]}
           />
         )}
-        {(formInputs.secondVaccine === "yes" ||
-          (formInputs.secondVaccine === "no" &&
-            formInputs.firstVaccine === "yes")) && (
-          <CalendarInput
-            id="firstVaccineDate"
-            label={`${
-              formInputs.secondVaccine === "yes" ? "7" : "8"
-            }.What date did you have your ${
-              formInputs.secondVaccine === "yes" ? "second" : "first"
-            } COVID-19 vaccine?`}
-            value={formInputs.firstVaccineDate}
-            required
-            onChange={onInputChange}
-          />
+
+        {formInputs.vaccineStatus === "STARTED" && (
+          <>
+            <CalendarInput
+              id="firstVaccineDate"
+              value={formInputs.firstVaccineDate}
+              onChange={onInputChange}
+              label="First vaccine date"
+              required
+            />
+            <CalendarInput
+              id="secondVaccineDate"
+              value={formInputs.secondVaccineDate}
+              onChange={onInputChange}
+              label="Second vaccine date"
+              required
+            />
+          </>
         )}
+
+        <TextInputControl
+          id="vaccineInfo"
+          label="Vaccine info"
+          value={formInputs.vaccineInfo}
+          onChange={onInputChange}
+          disabled={!consent}
+          multipleLine={true}
+          rows={4}
+        />
+
+        <WebcamCapture />
 
         <PrimaryButton
           text="Submit"
+          disabled={!consent}
           onClick={submitForm}
           styles={{
             root: {
@@ -175,7 +202,7 @@ export const Form: React.FC<IFormProps> = () => {
             },
           }}
         />
-      </form>
-    </div>
+      </Stack>
+    </form>
   );
 };
