@@ -16,18 +16,12 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
     );
 
     const onDateChage = React.useCallback(
-      (date: Date, selectedDateRangeArray?: Date[] | undefined): void => {
+      (date: Date, _selectedDateRangeArray?: Date[] | undefined): void => {
         setSelectedDate(date);
         onChange(id, date.toLocaleDateString());
       },
       [onChange, id]
     );
-
-    // React.useEffect(() => {
-    //   if (selectedDate.toLocaleDateString() !== value) {
-    //     onChange(id, selectedDate.toLocaleDateString());
-    //   }
-    // }, [selectedDate, id, onChange, value]);
 
     return (
       <div

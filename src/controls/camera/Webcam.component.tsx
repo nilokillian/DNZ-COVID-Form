@@ -6,7 +6,7 @@ import { DefaultButton } from "@fluentui/react";
 const videoConstraints = {
   width: 220,
   height: 200,
-  facingMode: "user",
+  facingMode: "environment",
 };
 
 export const WebcamCapture = () => {

@@ -3,7 +3,7 @@ import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import { Form } from "./components/form/Form.component";
 import Header from "./components/header/Header.component";
 import { UserConsent } from "./components/consent/Consent.component";
-import { companyPolicy } from "./const/strings";
+import { headerTitle } from "./const/strings";
 import { MessageBarType } from "@fluentui/react";
 
 import "./App.css";
@@ -20,6 +20,8 @@ const App = () => {
   initializeIcons();
 
   const [user, setUser] = useState<User>({} as User);
+  const [privacyStatementAgreed, setPrivacyStatementAgreed] =
+    useState<boolean>(false);
 
   useEffect(() => {
     //API call to set user
@@ -28,18 +30,18 @@ const App = () => {
   return (
     <div className="App">
       <div className="container">
-        <Header title="Codid-19 Vaccine Tracker" />
+        <Header title={headerTitle} />
         {!user.consent && (
           <UserConsent
-            text={companyPolicy}
             messageType={MessageBarType.info}
-            onChange={() => {
+            onConsent={() => {
               setUser((prev) => ({ ...prev, consent: true }));
             }}
+            onPrivacyAgree={() => setPrivacyStatementAgreed(true)}
+            privacyStatementAgreed={privacyStatementAgreed}
             consent={true}
           />
         )}
-
         <Form consent={user.consent} />
       </div>
     </div>

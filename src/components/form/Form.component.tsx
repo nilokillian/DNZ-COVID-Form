@@ -8,11 +8,11 @@ import {
   Separator,
 } from "@fluentui/react";
 import React from "react";
-import { CalendarInput } from "../controls/CalendarInput.component";
-import { RadioButtonControl } from "../controls/RadioButton.component";
-import { TextInputControl } from "../controls/TextInput.component";
-import { WebcamCapture } from "../controls/Webcam.component";
-import { FileInput } from "../controls/FileInput";
+import { CalendarInput } from "../../controls/calendar/CalendarInput.component";
+import { RadioButtonControl } from "../../controls/RadioButton.component";
+import { TextInputControl } from "../../controls/TextInput.component";
+import { WebcamCapture } from "../../controls/camera/Webcam.component";
+import { FileInput } from "../../controls/file-input/FileInput";
 import { ModalWindow } from "../modal/Modal.component";
 
 import injectionIcon from "../../injection.svg";

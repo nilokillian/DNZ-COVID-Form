@@ -5,6 +5,7 @@ import "./modal.css";
 
 interface IModalWindowProps {
   isModalOpen: boolean;
+  isBlocking?: boolean;
   hideModal: () => void;
 }
 
@@ -12,14 +13,16 @@ export const ModalWindow: FC<IModalWindowProps> = ({
   children,
   isModalOpen,
   hideModal,
+  isBlocking,
 }) => {
   return (
     <Modal
       titleAriaId={"ty"}
       isOpen={isModalOpen}
       onDismiss={hideModal}
-      isBlocking={false}
+      isBlocking={isBlocking}
       containerClassName="modal-container"
+      styles={{ scrollableContent: { overflowY: "visible" } }}
     >
       {children}
     </Modal>
