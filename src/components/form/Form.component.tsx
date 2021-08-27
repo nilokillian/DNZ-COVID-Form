@@ -1,5 +1,4 @@
 import {
-  IChoiceGroupOption,
   Label,
   PrimaryButton,
   DefaultButton,
@@ -18,18 +17,19 @@ import { ModalWindow } from "../modal/Modal.component";
 import injectionIcon from "../../injection.svg";
 import "./form.css";
 import { icon } from "../../utils/iconsUtil";
+import { SearchableDropdownControl } from "../../controls/searchable-dropdown/SearchableDropdown";
 
-const businessUnits: IChoiceGroupOption[] = [
-  {
-    key: "bituminousAndSpecialistServices",
-    text: "Bituminous & Specialist Services",
-  },
-  { key: "DMRoads", text: "DM Roads" },
-  { key: "headOffice", text: "Head Office" },
-  { key: "plantAssets", text: "Plant & Assets" },
-  { key: "pavements", text: "Pavements" },
-  { key: "tasmania", text: "Tasmania" },
-];
+// const businessUnits: IChoiceGroupOption[] = [
+//   {
+//     key: "bituminousAndSpecialistServices",
+//     text: "Bituminous & Specialist Services",
+//   },
+//   { key: "DMRoads", text: "DM Roads" },
+//   { key: "headOffice", text: "Head Office" },
+//   { key: "plantAssets", text: "Plant & Assets" },
+//   { key: "pavements", text: "Pavements" },
+//   { key: "tasmania", text: "Tasmania" },
+// ];
 
 // export enum VaccineStatus {
 //   AWAITING = "Awaiting booking",
@@ -129,7 +129,12 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
           required
           disabled={!consent}
         />
-        <RadioButtonControl
+        <SearchableDropdownControl
+          label="What is your Business Unit?"
+          disabled={!consent}
+          required
+        />
+        {/* <RadioButtonControl
           id="businessUnit"
           label="What is your Business Unit?"
           value={formInputs.businessUnit}
@@ -137,7 +142,7 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
           options={businessUnits}
           disabled={!consent}
           required
-        />
+        /> */}
         <RadioButtonControl
           id="vaccineStatus"
           label="What is your vaccine status ?"
