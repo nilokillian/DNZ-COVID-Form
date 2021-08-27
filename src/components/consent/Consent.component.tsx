@@ -67,6 +67,7 @@ export const UserConsent: FC<IUserConsentprops> = ({
         <Separator />
         <div style={{ height: 50 }}>
           <DefaultButton
+            required={!privacyStatementAgreed}
             text={
               privacyStatementAgreed
                 ? "Back"

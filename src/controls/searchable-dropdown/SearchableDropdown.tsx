@@ -89,7 +89,7 @@ export const SearchableDropdownControl: FC<ISearchableDropdownControl> = ({
   const getTextFromItem = (item: ITag) => item.name;
   return (
     <div>
-      <Label htmlFor={pickerId} required={required}>
+      <Label htmlFor={pickerId} required={required} disabled={disabled}>
         {label}
       </Label>
       <TagPicker
