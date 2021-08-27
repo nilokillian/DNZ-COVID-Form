@@ -2,9 +2,9 @@ import {
   IChoiceGroupOption,
   Label,
   PrimaryButton,
+  DefaultButton,
   Stack,
   ActionButton,
-  IIconProps,
   Separator,
 } from "@fluentui/react";
 import React from "react";
@@ -17,10 +17,7 @@ import { ModalWindow } from "../modal/Modal.component";
 
 import injectionIcon from "../../injection.svg";
 import "./form.css";
-
-const cameraIcon: IIconProps = { iconName: "Camera" };
-const addCommentIcon: IIconProps = { iconName: "Comment" };
-const attachIcon: IIconProps = { iconName: "Attach" };
+import { icon } from "../../utils/iconsUtil";
 
 const businessUnits: IChoiceGroupOption[] = [
   {
@@ -199,7 +196,7 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
         <Separator />
         <Stack horizontal wrap>
           <ActionButton
-            iconProps={cameraIcon}
+            iconProps={icon.camera}
             allowDisabledFocus
             disabled={!consent}
             onClick={() => setCameraWindow(true)}
@@ -211,7 +208,7 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
             Take a photo
           </ActionButton>
           <ActionButton
-            iconProps={addCommentIcon}
+            iconProps={icon.addComment}
             allowDisabledFocus
             disabled={!consent}
             onClick={() => setCommentWindow(true)}
@@ -224,7 +221,7 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
           </ActionButton>
 
           <ActionButton
-            iconProps={attachIcon}
+            iconProps={icon.attach}
             allowDisabledFocus
             disabled={!consent}
             onClick={() => setAttachmentWindow(true)}
@@ -242,21 +239,33 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
           hideModal={() => setCameraWindow(false)}
         >
           <WebcamCapture />
+          <Separator />
+          <DefaultButton
+            text=" Continue"
+            onClick={() => setCameraWindow(false)}
+          />
         </ModalWindow>
         <ModalWindow
           isModalOpen={commentWindow}
           hideModal={() => setCommentWindow(false)}
         >
-          <Label>
-            Free text / to enter vaccine info (Pfizer, Astrazeneca etc)
-          </Label>
-          <textarea
-            id="vaccineInfo"
-            cols={40}
-            rows={5}
-            value={formInputs.vaccineInfo}
-            onChange={(e) => onInputChange("vaccineInfo", e.target.value)}
-          />
+          <Stack verticalAlign="space-between">
+            <Label>
+              Free text / to enter vaccine info (Pfizer, Astrazeneca etc)
+            </Label>
+            <textarea
+              id="vaccineInfo"
+              cols={40}
+              rows={5}
+              value={formInputs.vaccineInfo}
+              onChange={(e) => onInputChange("vaccineInfo", e.target.value)}
+            />
+            <Separator />
+            <DefaultButton
+              text=" Continue"
+              onClick={() => setCommentWindow(false)}
+            />
+          </Stack>
         </ModalWindow>
         <ModalWindow
           isModalOpen={attachmentWindow}
@@ -267,6 +276,11 @@ export const Form: React.FC<IFormProps> = ({ consent }) => {
             inputLabel="Attach file"
             onChange={onInputChange}
             name="attachment"
+          />
+          <Separator />
+          <DefaultButton
+            text=" Continue"
+            onClick={() => setAttachmentWindow(false)}
           />
         </ModalWindow>
         <PrimaryButton

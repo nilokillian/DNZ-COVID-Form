@@ -22,7 +22,6 @@ interface IUserConsentprops {
 
 export const UserConsent: FC<IUserConsentprops> = ({
   messageType,
-  consent,
   onConsent,
   onPrivacyAgree,
   privacyStatementAgreed,
@@ -68,12 +67,15 @@ export const UserConsent: FC<IUserConsentprops> = ({
         <Separator />
         <div style={{ height: 50 }}>
           <DefaultButton
-            text="I confirm that I have read the privacy policy"
+            text={
+              privacyStatementAgreed
+                ? "Back"
+                : "I confirm that I have read the privacy policy"
+            }
             onClick={() => {
-              onPrivacyAgree();
               setPrivacyWindow(false);
+              if (!privacyStatementAgreed) onPrivacyAgree();
             }}
-            disabled={privacyStatementAgreed}
           />
         </div>
       </ModalWindow>

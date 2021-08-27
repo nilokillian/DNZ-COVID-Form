@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./cameraStyles.css";
 import Webcam from "react-webcam";
-import { DefaultButton } from "@fluentui/react";
+import { ActionButton } from "@fluentui/react";
+import { icon } from "../../utils/iconsUtil";
 
 const videoConstraints = {
   width: 220,
@@ -48,11 +49,16 @@ export const WebcamCapture = () => {
         )}
       </div>
       <div className="buton-container">
-        <DefaultButton
-          text={getBtntext()}
-          onClick={onImageClick}
+        <ActionButton
+          iconProps={icon.camera}
           allowDisabledFocus
-        />
+          onClick={onImageClick}
+          styles={{
+            icon: { fontSize: 20 },
+          }}
+        >
+          {getBtntext()}
+        </ActionButton>
       </div>
     </div>
   );
