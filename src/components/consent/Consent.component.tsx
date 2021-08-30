@@ -36,10 +36,13 @@ export const UserConsent: FC<IUserConsentprops> = ({
 
             <h5>
               The information that we will collect, and how we will use, handle
-              and store it, is set out in our{" "}
+              and store it.{" "}
+            </h5>
+            <h5>
+              {" "}
               <Link onClick={() => setPrivacyWindow(true)} underline>
                 {" "}
-                Privacy.{" "}
+                Read Privacy Statement
               </Link>
             </h5>
             {privacyStatementAgreed ? (
