@@ -1,3 +1,17 @@
+.file-name-contailer {
+  width: 80%;
+  border: 1px solid rgb(96, 94, 92);
+  height: 30px;
+}
+
+.file-name {
+  height: 30px;
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+}
+
 .inputfile {
   width: 0.1px;
   height: 0.1px;
@@ -8,7 +22,7 @@
 }
 
 .inputfile + label {
-  width: 90%;
+  width: 100%;
   max-height: 32px;
   font-size: 0.6rem;
   font-weight: 700;

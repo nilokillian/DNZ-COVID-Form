@@ -21,8 +21,8 @@ export const ModalWindow: FC<IModalWindowProps> = ({
       isOpen={isModalOpen}
       onDismiss={hideModal}
       isBlocking={isBlocking}
-      containerClassName="modal-container"
-      styles={{ scrollableContent: { overflowY: "visible" } }}
+      // containerClassName="modal-container"
+      // styles={{ scrollableContent: { overflowY: "initial" } }}
     >
       {children}
     </Modal>

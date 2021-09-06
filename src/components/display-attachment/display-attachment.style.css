@@ -1,0 +1,9 @@
+.attachment-name {
+  padding: 5px;
+  background: #95c94e;
+}
+.attachment-container {
+  padding-bottom: 20px;
+  padding-top: 10px;
+  display: flex;
+}

@@ -1,6 +1,7 @@
-import React from "react";
-import { Label } from "@fluentui/react";
+import React, { FC, useEffect, useRef, useState } from "react";
+import { Label, DefaultButton, ActionButton, Stack } from "@fluentui/react";
 import "./fileInput.css";
+import { icon } from "../../utils/iconsUtil";
 
 export interface IFileInputProps {
   id: string;
@@ -10,22 +11,31 @@ export interface IFileInputProps {
   onChange: (id: string, selectedFile: string) => void;
 }
 
-export const FileInput: React.FC<IFileInputProps> = ({
+export const FileInput: FC<IFileInputProps> = ({
   id,
   inputLabel,
   name,
   onChange,
   disabled,
 }): JSX.Element => {
-  const innerRef = React.useRef<any>(null);
+  const innerRef = useRef<HTMLInputElement>(null);
 
-  React.useEffect(() => {
+  const [inputKey, setInputKey] = useState(() => Math.random().toString(36));
+
+  const [fileSelected, setFileSelected] = useState(false);
+
+  useEffect(() => {
+    console.log(innerRef.current!.files);
     const curentRef = innerRef.current;
-    if (curentRef) {
+    if (curentRef && curentRef.files) {
       const addFileToSpan = () => {
-        const label = curentRef.nextElementSibling;
-        const fileName = curentRef.files[0].name;
-        if (fileName) label.querySelector("span").innerHTML = fileName;
+        if (curentRef && curentRef.files && curentRef.files.length > 0) {
+          const label = curentRef.nextElementSibling;
+          const fileName = curentRef.files[0].name;
+
+          if (fileName && label)
+            label.querySelector("span")!.innerHTML = fileName;
+        }
       };
 
       curentRef.addEventListener("change", addFileToSpan);
@@ -34,10 +44,38 @@ export const FileInput: React.FC<IFileInputProps> = ({
         curentRef.removeEventListener("change", addFileToSpan);
       };
     }
-  }, [innerRef]);
+  }, [innerRef, inputKey]);
 
   const onFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(await readFile(e.target.files![0]), name);
+    const isSelected = e.target.files && e.target.files.length < 1;
+    const curentRef = innerRef.current;
+    if (curentRef && e.target!.files!.length < 1) {
+      const label = curentRef.nextElementSibling;
+
+      if (label) {
+        label.querySelector("span")!.innerHTML = "";
+      }
+    }
+
+    setFileSelected(!isSelected);
+  };
+
+  const clearInput = async () => {
+    const selectedFile = innerRef.current!.files![0];
+
+    const randomString = Math.random().toString(36);
+    const curentRef = innerRef.current;
+    if (curentRef) {
+      const label = curentRef.nextElementSibling;
+      setInputKey(() => randomString);
+      if (label) {
+        label.querySelector("span")!.innerHTML = "";
+      }
+
+      const file = await readFile(selectedFile);
+      setFileSelected(false);
+      onChange(selectedFile.name, file);
+    }
   };
 
   const getInputClass = () =>
@@ -48,21 +86,31 @@ export const FileInput: React.FC<IFileInputProps> = ({
       {inputLabel && <Label>{inputLabel}</Label>}
 
       <input
+        key={inputKey}
         ref={innerRef}
         onChange={(e) => onFileSelect(e)}
         type="file"
         name={`${name}[]`}
         id={name}
         className={getInputClass()}
-        data-multiple-caption="{count} files selected"
-        multiple
-        disabled={false}
+        // data-multiple-caption="{count} files selected"
+        accept=".jpg, .png, .pdf, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
       />
 
-      {/* <div className={styles.inputDisabled}></div> */}
-      <label htmlFor={name}>
-        <span className="fileName"></span>
-      </label>
+      <Stack horizontal>
+        <label htmlFor={name} className="file-name-contailer">
+          <span className="file-name"></span>
+        </label>
+        <ActionButton
+          iconProps={icon.save}
+          styles={{ icon: { fontSize: 25 }, root: { height: 30 } }}
+          allowDisabledFocus
+          disabled={!fileSelected}
+          onClick={clearInput}
+        >
+          Save
+        </ActionButton>
+      </Stack>
     </div>
   );
 };
@@ -77,6 +125,7 @@ const readFile = (file: File): Promise<string> => {
     reader.onload = () => {
       resolve(reader.result as string);
     };
-    reader.readAsText(file);
+    reader.readAsDataURL(file);
+    // reader.readAsText(file);
   });
 };

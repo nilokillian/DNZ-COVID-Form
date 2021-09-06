@@ -1,0 +1,13 @@
+.privacy-statement-container {
+  text-align: center;
+  padding: 50px;
+  max-width: 800px;
+  height: 80vh;
+  overflow-y: auto;
+}
+
+.privacy-statement-content {
+  text-align: left;
+  font-size: 14px;
+  color: #201f1e;
+}

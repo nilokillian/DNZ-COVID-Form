@@ -1,16 +1,23 @@
 import React from "react";
-import { Calendar, defaultCalendarStrings, Label } from "@fluentui/react";
+import {
+  Calendar,
+  defaultCalendarStrings,
+  IDateFormatting,
+  Label,
+} from "@fluentui/react";
 
 export interface ICalendarInputProps {
   id: string;
   label: string;
-  value: string;
+  value: Date;
   required: boolean;
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: Date) => void;
 }
 
+const og = {} as IDateFormatting;
+
 export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
-  ({ id, label, value, onChange }) => {
+  ({ id, label, value, onChange, required }) => {
     const [selectedDate, setSelectedDate] = React.useState<Date>(() =>
       value ? new Date(value) : new Date()
     );
@@ -18,7 +25,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
     const onDateChage = React.useCallback(
       (date: Date, _selectedDateRangeArray?: Date[] | undefined): void => {
         setSelectedDate(date);
-        onChange(id, date.toLocaleDateString());
+        onChange(id, date);
       },
       [onChange, id]
     );
@@ -30,7 +37,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
           padding: "20px 0px 30px",
         }}
       >
-        <Label>{label}</Label>
+        <Label required={required}>{label}</Label>
         <Calendar
           onSelectDate={onDateChage}
           value={selectedDate}

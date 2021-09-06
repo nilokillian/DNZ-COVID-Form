@@ -33,13 +33,13 @@ export const Header: FC<IHeaderProps> = ({ title }) => {
                 textAlign: "right",
                 color: "#FFFFFF",
                 fontSize: 17,
-                marginRight: 10,
+                marginRight: 20,
               },
             }}
           >
             {title}
           </Label>
-          <Separator styles={{ root: { marginRight: 10, marginLeft: 10 } }} />
+          <Separator styles={{ root: { marginRight: 10, marginLeft: 20 } }} />
         </Stack>
       </Stack>
     </div>
