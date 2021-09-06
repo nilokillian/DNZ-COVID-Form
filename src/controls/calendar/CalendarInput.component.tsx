@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Calendar,
-  defaultCalendarStrings,
-  IDateFormatting,
-  Label,
-} from "@fluentui/react";
+import { Calendar, defaultCalendarStrings, Label } from "@fluentui/react";
 
 export interface ICalendarInputProps {
   id: string;
@@ -13,8 +8,6 @@ export interface ICalendarInputProps {
   required: boolean;
   onChange: (id: string, value: Date) => void;
 }
-
-const og = {} as IDateFormatting;
 
 export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
   ({ id, label, value, onChange, required }) => {

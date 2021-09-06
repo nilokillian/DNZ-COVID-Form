@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { IVaccination } from "../context/App.context";
 import { apiBase } from "./index";
 

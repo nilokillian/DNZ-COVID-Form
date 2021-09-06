@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { Label, DefaultButton, ActionButton, Stack } from "@fluentui/react";
+import { Label, ActionButton, Stack } from "@fluentui/react";
 import "./fileInput.css";
 import { icon } from "../../utils/iconsUtil";
 
