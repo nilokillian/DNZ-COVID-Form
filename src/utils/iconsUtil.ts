@@ -4,4 +4,5 @@ export const icon = {
   attach: { iconName: "Attach" },
   cancel: { iconName: "Cancel" },
   save: { iconName: "Save" },
+  completed: { iconName: "Completed" },
 };

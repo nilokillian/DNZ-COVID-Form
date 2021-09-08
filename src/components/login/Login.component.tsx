@@ -1,6 +1,6 @@
-import { Label, MessageBarType, Stack, DefaultButton } from "@fluentui/react";
+import { Label, MessageBarType, Stack } from "@fluentui/react";
 import { useEffect, useState, FC, useCallback, memo } from "react";
-import { useHistory, Link as RouterLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { getEmployeeWithQuery } from "../../api/employee.api";
 import { sendVerificationCode } from "../../api/verification-code.api";
 import { useSharedState } from "../../context/App.context";
@@ -185,9 +185,6 @@ export const Login: FC = memo(() => {
             styles={{ root: { marginLeft: 20 } }}
           />
         </RouterLink> */}
-        <RouterLink to="/vaccination">
-          <DefaultButton text="Go to vac 8 form" />
-        </RouterLink>
       </form>
     </div>
   );

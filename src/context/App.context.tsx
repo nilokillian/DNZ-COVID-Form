@@ -5,6 +5,11 @@ export interface IAttachment {
   file: string;
 }
 
+export interface IBusinessUnit {
+  id?: number | null;
+  name: string;
+}
+
 export interface IVaccination {
   id?: number;
   shots: number;
@@ -24,7 +29,7 @@ export interface IEmployee {
   mobile: string;
   employeeNumber: string;
   privacyStatementConsent: boolean;
-  businessUnit: string;
+  businessUnit: IBusinessUnit;
   siteVisit?: [];
 }
 
@@ -44,7 +49,7 @@ const initialState: IAppState = {
     email: "",
     mobile: "",
     employeeNumber: "",
-    businessUnit: "",
+    businessUnit: { id: null, name: "" },
     privacyStatementConsent: false,
   },
   loading: false,

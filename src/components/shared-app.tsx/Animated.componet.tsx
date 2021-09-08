@@ -7,25 +7,26 @@ import { ProfilePage } from "../../pages/profile.page";
 import { VaccinationPage } from "../../pages/vaccination.page";
 
 import "../../App.css";
+import { SuccessPage } from "../../pages/success.page";
 
 export const AnimatedSwitch = withRouter(({ location }) => {
   const [sharedState] = useSharedState();
 
   return (
     <TransitionGroup>
-      <CSSTransition key={location.key} classNames="slide" timeout={300}>
+      <CSSTransition key={location.key} classNames="page" timeout={300}>
         <Switch>
           <Route path="/" exact>
             <Redirect to="/login" />
           </Route>
           <Route path="/login" component={LoginPage} />
 
-          <Route path="/vaccination" component={VaccinationPage}>
-            {/* {sharedState.verificationPassed ? (
+          <Route path="/vaccination">
+            {sharedState.verificationPassed ? (
               <VaccinationPage />
             ) : (
               <Redirect to="/login" />
-            )} */}
+            )}
           </Route>
           <Route path="/profile">
             {sharedState.verificationPassed ? (
@@ -34,6 +35,9 @@ export const AnimatedSwitch = withRouter(({ location }) => {
               <Redirect to="/login" />
             )}
           </Route>
+
+          <Route path="/success" component={SuccessPage}></Route>
+
           <Route component={NotFoundPage} />
         </Switch>
       </CSSTransition>

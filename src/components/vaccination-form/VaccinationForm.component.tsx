@@ -27,6 +27,7 @@ import {
 } from "../../api/vaccination.api";
 import { IVaccination, useSharedState } from "../../context/App.context";
 import { DisplayAttachment } from "../display-attachment/DisplayAttachment.component";
+import { useHistory } from "react-router-dom";
 
 const vaccineShotsOptions = [
   { key: "0", text: "Zero shot" },
@@ -40,6 +41,7 @@ export enum FormMode {
 }
 
 export const VaccinationForm: FC = () => {
+  const history = useHistory();
   const [sharedState, setSharedState] = useSharedState();
   const [formInputs, setFormInputs] = useState<IVaccination>({
     id: undefined,
@@ -57,24 +59,26 @@ export const VaccinationForm: FC = () => {
     e.preventDefault();
 
     if (formMode === FormMode.new) {
-      const payload = { ...formInputs, employeeId: 8 };
+      const payload = { ...formInputs, employeeId: sharedState.employee.id };
 
-      await createVaccination(payload);
+      try {
+        setSharedState((prev) => ({ ...prev, loading: true }));
+        await createVaccination(payload);
+        setSharedState((prev) => ({ ...prev, loading: false }));
+        history.push("/success");
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       try {
+        setSharedState((prev) => ({ ...prev, loading: true }));
         await updateVaccination(formInputs.id!, formInputs);
+        setSharedState((prev) => ({ ...prev, loading: false }));
+        history.push("/success");
       } catch (error) {
         console.log(error);
       }
     }
-
-    // setFormInputs({
-    //   secondVaccineDate: "",
-    //   firstVaccineDate: "",
-    //   vaccineShotsCount: 0,
-    //   attachment: "",
-    //   comment: "",
-    // });
   };
 
   const onInputChange = (id: string, value: string) => {
@@ -100,30 +104,32 @@ export const VaccinationForm: FC = () => {
   };
 
   useEffect(() => {
-    getVaccination(8)
-      .then((response) => {
-        const { data } = response;
+    if (sharedState.employee.id) {
+      getVaccination(sharedState.employee.id)
+        .then((response) => {
+          const { data } = response;
 
-        if (data.vaccination) {
-          const { vaccination } = data;
+          if (data.vaccination) {
+            const { vaccination } = data;
 
-          console.log(data);
-          setFormInputs({
-            id: vaccination.id,
-            firstShotDate: vaccination.firstShotDate,
-            seconShotDate: vaccination.seconShotDate,
-            hasExeptionCertificate: vaccination.hasExeptionCertificate,
-            comment: vaccination.comment,
-            shots: vaccination.shots,
-            attachment: [],
-          });
-          setFormMode(FormMode.edit);
-        } else {
-          setFormMode(FormMode.new);
-        }
-      })
-      .catch((error) => error);
-  }, []);
+            console.log(data);
+            setFormInputs({
+              id: vaccination.id,
+              firstShotDate: vaccination.firstShotDate,
+              seconShotDate: vaccination.seconShotDate,
+              hasExeptionCertificate: vaccination.hasExeptionCertificate,
+              comment: vaccination.comment,
+              shots: vaccination.shots,
+              attachment: [],
+            });
+            setFormMode(FormMode.edit);
+          } else {
+            setFormMode(FormMode.new);
+          }
+        })
+        .catch((error) => error);
+    }
+  }, [sharedState.employee.id]);
 
   return (
     <form className="formBody" onSubmit={submitForm}>
@@ -216,15 +222,7 @@ export const VaccinationForm: FC = () => {
           />
           {sharedState.loading && <Spinner size={SpinnerSize.large} />}
         </Stack>
-
-        <PrimaryButton
-          text="Loadiing"
-          disabled={false}
-          onClick={() =>
-            setSharedState((prev) => ({ ...prev, loading: !prev.loading }))
-          }
-          styles={submitFromBtnStyle}
-        />
+        <div style={{ marginBottom: 30 }}></div>
       </Stack>
     </form>
   );

@@ -15,7 +15,12 @@ export const EmployeeCard: FC = () => {
         Employee number: {`${sharedState.employee.employeeNumber}`}
       </Label>
       <Label styles={{ root: { backgroundColor: "#f3f2f1", paddingLeft: 5 } }}>
-        Business unit: <span>{`${sharedState.employee.businessUnit}`}</span>
+        Business unit:{" "}
+        <span>{`${
+          sharedState.employee.businessUnit
+            ? sharedState.employee.businessUnit.name
+            : ""
+        }`}</span>
       </Label>
     </Stack>
   );
