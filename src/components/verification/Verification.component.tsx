@@ -1,12 +1,9 @@
-import { PrimaryButton } from "@fluentui/react";
+import { PrimaryButton, Spinner, SpinnerSize, Stack } from "@fluentui/react";
 import { FC } from "react";
 import { useSharedState } from "../../context/App.context";
 import { TextInputControl } from "../../controls/TextInput.component";
 import { ILogin } from "../login/Login.component";
-import {
-  textInputControlStyle,
-  verificationCodeBtnStyle,
-} from "./VerificationStylesObjects";
+import { textInputControlStyle } from "./VerificationStylesObjects";
 
 export interface IVerificationProps {
   codeInput: string | undefined;
@@ -25,7 +22,13 @@ export const Verification: FC<IVerificationProps> = ({
 
   const isDisabled = (): boolean => {
     const { firstName, lastName, employeeNumber } = login;
-    return !!(!firstName || !lastName || !employeeNumber || sharedState.error);
+    return !!(
+      !firstName ||
+      !lastName ||
+      !employeeNumber ||
+      sharedState.error ||
+      sharedState.loading
+    );
   };
 
   return (
@@ -45,12 +48,19 @@ export const Verification: FC<IVerificationProps> = ({
         />
       )}
       {!sharedState.verificationPassed && !sharedState.sentVerificationCode && (
-        <PrimaryButton
-          text="Get verification code"
-          onClick={onSendCode}
-          styles={verificationCodeBtnStyle}
-          disabled={isDisabled()}
-        />
+        <Stack
+          horizontal
+          horizontalAlign="start"
+          tokens={{ childrenGap: 5 }}
+          styles={{ root: { marginLeft: 20 } }}
+        >
+          <PrimaryButton
+            text="Get verification code"
+            onClick={onSendCode}
+            disabled={isDisabled()}
+          />
+          {sharedState.loading && <Spinner size={SpinnerSize.large} />}
+        </Stack>
       )}
     </>
   );

@@ -72,7 +72,7 @@ export const Login: FC = memo(() => {
 
   const onSendCodeClick = async () => {
     // e.preventDefault();
-
+    setSharedState((prev) => ({ ...prev, loading: true }));
     try {
       const employee = await getEmployeeWithQuery(login);
 
@@ -97,6 +97,7 @@ export const Login: FC = memo(() => {
     } catch (error) {
       console.log(error);
     }
+    setSharedState((prev) => ({ ...prev, loading: false }));
   };
 
   const isInputDisabled = (): boolean =>

@@ -7,9 +7,15 @@
 .file-name {
   height: 30px;
   min-height: 30px;
-  display: inline-flex;
+  /* display: inline-flex;
   align-items: center;
-  margin-left: 6px;
+  margin-left: 6px; */
+  display: flow-root;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-left: 3px;
+  padding-top: 4px;
+  text-overflow: ellipsis;
 }
 
 .inputfile {

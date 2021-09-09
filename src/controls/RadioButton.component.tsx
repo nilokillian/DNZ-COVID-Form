@@ -58,8 +58,7 @@ export const RadioButtonControl: React.FC<IRadioButtonControlProps> = ({
         options={withImage ? composeOptions(options) : options}
         onChange={onRadioChange}
         label={label}
-        // styles={{ label: { fontSize: 13 } }}
-        styles={{ root: {} }}
+        styles={{ label: { fontSize: 12 } }}
         required={required}
       />
     </div>

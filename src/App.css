@@ -1,78 +1,10 @@
 .App {
   max-width: 800px;
-  overflow: hidden;
   margin: auto;
-  margin: 20px 0 0 500px;
-  padding: 80px;
+  padding: 10px;
+  padding-top: 30px;
 }
 
 .container {
-  background-color: #ffffff61;
-  box-shadow: 0 0 11px rgb(0 0 0 / 12%);
-  box-sizing: border-box;
-  display: block;
-  position: relative;
-  text-align: left;
-}
-
-.page {
-  position: absolute;
-  left: 15px;
-  right: 15px;
-}
-
-.page-enter {
-  opacity: 0;
-  transform: scale(1.1);
-}
-
-.page-enter-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.page-exit {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.page-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 300ms, transform 300ms;
-}
-
-/* slideTransition.scss */
-
-slide-appear {
-  opacity: 0;
-  transform: translateX(-300px) scale(0.6);
-}
-
-.slide-appear-done {
-  opacity: 1;
-  transition: all 400ms;
-  transform: translateX(0) scale(1);
-}
-
-.slide-enter {
-  opacity: 0;
-  transform: translateX(-200px) scale(0.3);
-}
-
-.slide-enter-active {
-  opacity: 1;
-  transition: all 400ms ease-out;
-  transform: translateX(0) scale(1);
-}
-
-.slide-exit {
-  opacity: 1;
-}
-
-.slide-exit-active {
-  opacity: 0;
-  transition: all 400ms ease-in;
-  transform: translateX(200px) scale(0.3);
+  box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
 }

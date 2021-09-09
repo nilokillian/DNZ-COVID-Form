@@ -1,23 +1,15 @@
 import { Icon, Label } from "@fluentui/react";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { icon } from "../utils/iconsUtil";
-import { Link } from "react-router-dom";
-import { IEmployee, useSharedState } from "../context/App.context";
+import { useHistory } from "react-router-dom";
 
 export const SuccessPage: FC = () => {
-  const [sharedState, setSharedState] = useSharedState();
+  const history = useHistory();
+  function refreshPage() {
+    history.push("/");
+    window.location.reload();
+  }
 
-  useEffect(() => {
-    if (sharedState)
-      setSharedState(() => ({
-        employee: {} as IEmployee,
-
-        sentVerificationCode: "",
-        loading: false,
-        error: null,
-        verificationPassed: false,
-      }));
-  }, [setSharedState, sharedState]);
   return (
     <div
       className="success-page-container"
@@ -29,12 +21,13 @@ export const SuccessPage: FC = () => {
       }}
     >
       {/* <Stack verticalAlign="center"> */}
-      <Link to="/login">
-        <Icon
-          styles={{ root: { fontSize: 38, color: "#95c94e", marginRight: 10 } }}
-          iconName={icon.completed.iconName}
-        />
-      </Link>
+
+      <Icon
+        styles={{ root: { fontSize: 38, color: "#95c94e", marginRight: 10 } }}
+        iconName={icon.completed.iconName}
+        onClick={refreshPage}
+      />
+
       <Label>{"Success"}</Label>
       {/* </Stack> */}
     </div>

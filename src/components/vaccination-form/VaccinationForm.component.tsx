@@ -33,6 +33,7 @@ const vaccineShotsOptions = [
   { key: "0", text: "Zero shot" },
   { key: "1", text: "One shot" },
   { key: "2", text: "Two shots" },
+  { key: "3", text: "Booster" },
 ];
 
 export enum FormMode {
@@ -198,6 +199,7 @@ export const VaccinationForm: FC = () => {
           value={formInputs.comment}
           onChange={(e) => onInputChange("comment", e.target.value)}
           disabled={sharedState.loading}
+          style={{ marginLeft: 1 }}
         />
         <Separator />
 
