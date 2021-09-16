@@ -58,7 +58,7 @@ export const Verification: FC<IVerificationProps> = ({
 
   return (
     <>
-      {employee.id && !verification.isSent && (
+      {employee.id !== 0 && !verification.isSent && (
         <>
           {error && error[ErrorKeyEnum.SEND_CODE] ? (
             <MessageBar messageBarType={MessageBarType.error}>
@@ -90,7 +90,7 @@ export const Verification: FC<IVerificationProps> = ({
         </>
       )}
 
-      {employee.id && verification.isSent && !verification.passed && (
+      {employee.id !== 0 && verification.isSent && !verification.passed && (
         <>
           <MessageBar isMultiline>
             We have sent a verification code. Please enter it to sign in
