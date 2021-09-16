@@ -1,2 +1,2 @@
-//export const apiBase = "http://localhost:8080";
-export const apiBase = "https://vaccinateservicecontainer.azurewebsites.net";
+export const apiBase = "http://localhost:5000";
+//export const apiBase = "https://vaccinateservicecontainer.azurewebsites.net";

@@ -10,12 +10,13 @@ interface IHeaderProps {
 
 export const Header: FC<IHeaderProps> = ({ title }) => {
   return (
-    <div className="formTitle">
+    <div className="header-container">
       <Stack horizontal wrap tokens={wrapStackTokens}>
         <Image
           alt="logo"
           src={logo}
           styles={{
+            root: { borderRadius: 3 },
             image: {
               width: 185,
             },
@@ -25,6 +26,7 @@ export const Header: FC<IHeaderProps> = ({ title }) => {
         <Stack
           verticalAlign="center"
           grow
+
           // styles={{ root: { marginRight: 20 } }}
         >
           <Label

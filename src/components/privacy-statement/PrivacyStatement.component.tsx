@@ -1,39 +1,17 @@
 import { DefaultButton, Separator, Stack } from "@fluentui/react";
 import { FC } from "react";
-import { useHistory } from "react-router-dom";
-import { updateEmployee } from "../../api/employee.api";
 import { privacyStatementHtml } from "../../const/strings";
-import { IAppState, useSharedState } from "../../context/App.context";
-
 import "./privacyStatemen.style.css";
 
 interface IPrivacyStatementProps {
   hideModal: () => void;
+  onAgree: () => void;
 }
 
-export const PrivacyStatement: FC<IPrivacyStatementProps> = ({ hideModal }) => {
-  const [sharedState, setSharedState] = useSharedState();
-
-  const history = useHistory();
-
-  const onAgree = async (): Promise<void> => {
-    const updatedState = {
-      ...sharedState,
-      employee: { ...sharedState.employee },
-    } as IAppState;
-
-    try {
-      updatedState.employee.privacyStatementConsent = true;
-      await updateEmployee(updatedState.employee);
-      setSharedState(() => updatedState);
-      hideModal();
-
-      history.push("/vaccination");
-    } catch (error) {
-      hideModal();
-    }
-  };
-
+export const PrivacyStatement: FC<IPrivacyStatementProps> = ({
+  hideModal,
+  onAgree,
+}) => {
   return (
     <div className="privacy-statement-container">
       <Separator />

@@ -92,6 +92,7 @@ export const FileInput: FC<IFileInputProps> = ({
         type="file"
         name={`${name}[]`}
         id={name}
+        multiple
         className={getInputClass()}
         // data-multiple-caption="{count} files selected"
         accept=".jpg, .png, .pdf, .jpeg, .gif, .bmp, .tif, .tiff|image/*"

@@ -7,4 +7,22 @@
 
 .container {
   box-shadow: rgb(0 0 0 / 16%) 0px 1px 4px;
+  border-radius: 3px;
+}
+
+.header-container {
+  position: relative;
+  background: #000000;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.login-form-container {
+  background-color: #ffffff61;
+  box-shadow: 0 0 11px rgb(0 0 0 / 12%);
+  padding-top: 10px;
+}
+
+.login-form {
+  padding: 20px;
 }

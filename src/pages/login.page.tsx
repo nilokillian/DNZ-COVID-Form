@@ -1,4 +1,4 @@
 import { FC } from "react";
-import { Login } from "../components/login/Login.component";
+import { LoginForm } from "../components/login/LoginForm.component";
 
-export const LoginPage: FC = () => <Login />;
+export const LoginPage: FC = () => <LoginForm />;

@@ -1,12 +1,11 @@
 import { Icon, Stack, Text } from "@fluentui/react";
 import { FC } from "react";
-import { IAttachment } from "../../context/App.context";
 import { icon } from "../../utils/iconsUtil";
 
 import "./display-attachment.style.css";
 
 export interface IDisplayAttachmentProps {
-  data: IAttachment[];
+  data: any[];
   onRemove: (name: string) => void;
 }
 

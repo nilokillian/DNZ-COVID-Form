@@ -1,9 +1,9 @@
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
-import { SharedStateProvider } from "./context/App.context";
-import { SharedApp } from "./components/shared-app.tsx/SharedApp";
-import "./App.css";
 import Header from "./components/header/Header.component";
 import { headerTitle } from "./const/strings";
+import { AppRouter } from "./components/AppRouter";
+
+import "./App.css";
 
 const App = () => {
   initializeIcons();
@@ -12,9 +12,7 @@ const App = () => {
     <div className="App">
       <div className="container">
         <Header title={headerTitle} />
-        <SharedStateProvider>
-          <SharedApp />
-        </SharedStateProvider>
+        <AppRouter />
       </div>
     </div>
   );

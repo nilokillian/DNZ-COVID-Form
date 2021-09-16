@@ -5,4 +5,5 @@ export const icon = {
   cancel: { iconName: "Cancel" },
   save: { iconName: "Save" },
   completed: { iconName: "Completed" },
+  send: { iconName: "Send" },
 };
