@@ -1,7 +1,7 @@
 import { IBusinessUnit } from "./IBusinessUnit";
 
 export interface IEmployee {
-  id?: number;
+  id: number;
   firstName: string;
   lastName: string;
   email: string;

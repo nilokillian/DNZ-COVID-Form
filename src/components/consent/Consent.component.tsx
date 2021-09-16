@@ -21,14 +21,14 @@ export const EmployeeConsent: FC = (): JSX.Element => {
     if (privacyConsent) {
       dispatch(allActionCreators.setAuthLoading(true));
 
-      const updateEmployee: IEmployee = {
+      const updateEmployee: Partial<IEmployee> = {
         ...employee,
         privacyStatementConsent: true,
       };
 
       delete updateEmployee.id;
 
-      EmployeeService.updateEmployee(employee.id!, updateEmployee)
+      EmployeeService.updateEmployee(employee.id, updateEmployee)
         .then(() => {
           dispatch(
             allActionCreators.setEmployee({

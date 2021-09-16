@@ -1,14 +1,20 @@
-import { IEmployee } from "../../../models/IEmployee";
-import { IVerificationCode } from "../../../models/IVerification";
-
 import { AuthAction, AuthActionsEnum, AuthState } from "./types";
 
 const initialState: AuthState = {
   isAuth: false,
   isLoading: false,
-  verification: {} as IVerificationCode,
+  verification: { code: "", isSent: false, passed: false },
   error: null,
-  employee: {} as IEmployee,
+  employee: {
+    id: 0,
+    employeeNumber: "",
+    email: "",
+    lastName: "",
+    mobile: "",
+    privacyStatementConsent: false,
+    firstName: "",
+    businessUnit: { name: "" },
+  },
 };
 
 export default function authReducer(

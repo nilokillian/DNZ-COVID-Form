@@ -14,8 +14,9 @@ export default class EmployeeService {
       return await axios.get(
         `${apiBase}/_api/employees/getEmployee/${queryParam}`
       );
-    } catch (error: any) {
-      throw new Error(error);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting employee");
     }
   }
 
@@ -25,8 +26,9 @@ export default class EmployeeService {
         `${apiBase}/_api/employees/updateEmployee/${id}`,
         employee
       );
-    } catch (error: any) {
-      throw new Error(error);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error updating employee");
     }
   }
 }

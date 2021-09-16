@@ -40,7 +40,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   const [formInputs, setFormInputs] = useState<IVaccinationFormState>({
     shot: ShotsOptionsEnum.ZERO,
-    employeeId: employee.id!,
+    employeeId: employee.id,
     firstShotDate: null,
     seconShotDate: null,
     boosterDate: null,
@@ -56,7 +56,8 @@ export const VaccinationForm: FC = (): JSX.Element => {
       if (formMode === VaccinationFormModeEnum.NEW) {
         await VaccinationService.createVaccination(formInputs);
       } else {
-        await VaccinationService.updateVaccination(formInputs.id!, formInputs);
+        if (formInputs.id)
+          await VaccinationService.updateVaccination(formInputs.id, formInputs);
       }
     } catch (error) {
       dispatch(
@@ -99,7 +100,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
     dispatch(allActionCreators.setVaccinationLoading(true));
     try {
       const response = await VaccinationService.getEmployeeVaccination(
-        employee.id!
+        employee.id
       );
       if (response.data) {
         const vaccination = response.data;
@@ -123,19 +124,6 @@ export const VaccinationForm: FC = (): JSX.Element => {
   useEffect(() => {
     getVaccination();
   }, [getVaccination]);
-
-  // useEffect(() => {
-  //   if (employee.privacyStatementConsent && verification.passed)
-  //     if (!isAuth) {
-  //       dispatch(allActionCreators.setIsAuth(true));
-  //     }
-  // }, [
-  //   employee.privacyStatementConsent,
-  //   verification.isSent,
-  //   verification.passed,
-  //   isAuth,
-  //   dispatch,
-  // ]);
 
   return (
     <form className="formBody" onSubmit={submitForm}>

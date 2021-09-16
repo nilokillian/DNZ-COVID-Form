@@ -61,7 +61,7 @@ export const AuthActionCreators = {
         );
 
         dispatch(AuthActionCreators.setVarification(verification));
-      } catch (error: any) {
+      } catch (error) {
         dispatch(
           AuthActionCreators.setAuthError({
             [ErrorKeyEnum.SEND_CODE]: "Sending verification code error",

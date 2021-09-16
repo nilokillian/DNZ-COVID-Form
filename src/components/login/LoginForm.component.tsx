@@ -35,11 +35,8 @@ export const LoginForm: FC = memo(() => {
   const [loginForm, setLoginForm] = useState<ILoginForm>(() => initLoginState);
 
   const onInputChange = useCallback(
-    (
-      e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
-      newValue?: string
-    ) => {
-      const inputId = (e.target as HTMLInputElement).id;
+    (e: any, newValue?: string) => {
+      const inputId = e.target.id;
 
       setLoginForm({ ...loginForm, [inputId]: newValue });
     },

@@ -12,7 +12,6 @@ export interface IFileInputProps {
 }
 
 export const FileInput: FC<IFileInputProps> = ({
-  id,
   inputLabel,
   name,
   onChange,
@@ -25,7 +24,6 @@ export const FileInput: FC<IFileInputProps> = ({
   const [fileSelected, setFileSelected] = useState(false);
 
   useEffect(() => {
-    console.log(innerRef.current!.files);
     const curentRef = innerRef.current;
     if (curentRef && curentRef.files) {
       const addFileToSpan = () => {
@@ -33,8 +31,12 @@ export const FileInput: FC<IFileInputProps> = ({
           const label = curentRef.nextElementSibling;
           const fileName = curentRef.files[0].name;
 
-          if (fileName && label)
-            label.querySelector("span")!.innerHTML = fileName;
+          if (fileName && label) {
+            const fileNameSpan = label.querySelector("span");
+            if (fileNameSpan) {
+              fileNameSpan.innerHTML = fileName;
+            }
+          }
         }
       };
 
@@ -49,11 +51,12 @@ export const FileInput: FC<IFileInputProps> = ({
   const onFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const isSelected = e.target.files && e.target.files.length < 1;
     const curentRef = innerRef.current;
-    if (curentRef && e.target!.files!.length < 1) {
+    if (curentRef && e.target && e.target.files && e.target.files.length < 1) {
       const label = curentRef.nextElementSibling;
 
       if (label) {
-        label.querySelector("span")!.innerHTML = "";
+        const fileNameSpan = label.querySelector("span");
+        if (fileNameSpan) fileNameSpan.innerHTML = "";
       }
     }
 
@@ -61,20 +64,22 @@ export const FileInput: FC<IFileInputProps> = ({
   };
 
   const clearInput = async () => {
-    const selectedFile = innerRef.current!.files![0];
+    if (innerRef.current && innerRef.current.files) {
+      const selectedFile = innerRef.current.files[0];
+      const randomString = Math.random().toString(36);
+      const curentRef = innerRef.current;
+      if (curentRef) {
+        const label = curentRef.nextElementSibling;
+        setInputKey(() => randomString);
+        if (label) {
+          const fileNameSpan = label.querySelector("span");
+          if (fileNameSpan) fileNameSpan.innerHTML = "";
+        }
 
-    const randomString = Math.random().toString(36);
-    const curentRef = innerRef.current;
-    if (curentRef) {
-      const label = curentRef.nextElementSibling;
-      setInputKey(() => randomString);
-      if (label) {
-        label.querySelector("span")!.innerHTML = "";
+        const file = await readFile(selectedFile);
+        setFileSelected(false);
+        onChange(selectedFile.name, file);
       }
-
-      const file = await readFile(selectedFile);
-      setFileSelected(false);
-      onChange(selectedFile.name, file);
     }
   };
 
@@ -124,7 +129,8 @@ const readFile = (file: File): Promise<string> => {
       reject(new DOMException("Problem parsing input file."));
     };
     reader.onload = () => {
-      resolve(reader.result as string);
+      const res: any = reader.result;
+      resolve(res);
     };
     reader.readAsDataURL(file);
     // reader.readAsText(file);

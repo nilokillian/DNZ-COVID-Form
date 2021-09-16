@@ -9,8 +9,9 @@ export default class VaccinationService {
         `${apiBase}/_api/vaccination/saveRecord`,
         JSON.stringify(data)
       );
-    } catch (error: any) {
-      throw new Error(error);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error saving vax record");
     }
   }
 
@@ -19,8 +20,9 @@ export default class VaccinationService {
       return await axios.get<IVaccinationFormState>(
         `${apiBase}/_api/vaccination/getEmployeeVaccination/${employeeId}`
       );
-    } catch (error: any) {
-      throw new Error(error);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error getting vax8 for employee");
     }
   }
 
@@ -33,8 +35,9 @@ export default class VaccinationService {
         `${apiBase}/_api/vaccination/updateRecord/${vaccinationId}`,
         data
       );
-    } catch (error: any) {
-      throw new Error(error);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error updating vax8 record");
     }
   }
 }

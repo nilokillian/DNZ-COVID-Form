@@ -82,7 +82,7 @@ export const ShotsSelection: React.FC<IRadioButtonControlProps> = ({
     >
       <ChoiceGroup
         disabled={disabled}
-        selectedKey={value as string}
+        selectedKey={value}
         options={composeOptions(options)}
         onChange={onRadioChange}
         label={label}
