@@ -9,7 +9,6 @@ import {
   MessageBar,
   Separator,
   Link,
-  AnimationStyles,
 } from "@fluentui/react";
 import { useState, FC, useCallback, memo } from "react";
 import { EmployeeConsent } from "../consent/Consent.component";
@@ -19,9 +18,13 @@ import { useAction } from "../../hooks/useAction";
 import { ILoginForm } from "../../models/ILoginForm";
 import { isDisabled } from "../../utils/isDisabledField";
 import { ErrorKeyEnum } from "../../models/IError";
-const formBodyStack = {
-  root: { width: "70%", minHeight: 300 },
-};
+import {
+  errorMessageStyle,
+  formBodyStackStyle,
+  helpEmailStyle,
+  loginBtnStyle,
+} from "./LoginFormObjectStyles";
+import { helpEmail } from "../../const/strings";
 
 const initLoginState = {
   firstName: "",
@@ -32,6 +35,9 @@ const initLoginState = {
 
 export const LoginForm: FC = memo(() => {
   const { login, setAuthError } = useAction();
+  const { isLoading, employee, error, verification, isAuth } = useTypedSelector(
+    (state) => state.auth
+  );
   const [loginForm, setLoginForm] = useState<ILoginForm>(() => initLoginState);
 
   const onInputChange = useCallback(
@@ -43,14 +49,8 @@ export const LoginForm: FC = memo(() => {
     [setLoginForm, loginForm]
   );
 
-  const { isLoading, employee, error, verification, isAuth } = useTypedSelector(
-    (state) => state.auth
-  );
-  const onLoginHadler = () => {
-    // e.preventDefault();
-
+  const onLoginHadler = (): void => {
     const { firstName, lastName, employeeNumber } = loginForm;
-
     login(firstName, lastName, employeeNumber);
   };
 
@@ -59,7 +59,7 @@ export const LoginForm: FC = memo(() => {
       <form className="login-form">
         <Stack
           verticalAlign="center"
-          styles={formBodyStack}
+          styles={formBodyStackStyle}
           tokens={{ childrenGap: 10 }}
         >
           <TextField
@@ -95,12 +95,7 @@ export const LoginForm: FC = memo(() => {
               <MessageBar
                 messageBarType={MessageBarType.error}
                 onDismiss={() => setAuthError(null)}
-                styles={{
-                  content: {
-                    alignItems: "center",
-                    justifyContent: "center",
-                  },
-                }}
+                styles={errorMessageStyle}
               >
                 <Stack verticalAlign="center">
                   <Text variant="small">
@@ -121,9 +116,7 @@ export const LoginForm: FC = memo(() => {
                   loginForm.employeeNumber,
                   !isLoading,
                 ])}
-                styles={{
-                  root: { minWidth: 220, ...AnimationStyles.fadeIn400 },
-                }}
+                styles={loginBtnStyle}
               />
               {isLoading && <Spinner size={SpinnerSize.large} />}
             </Stack>
@@ -139,10 +132,7 @@ export const LoginForm: FC = memo(() => {
           verification.passed &&
           !employee.privacyStatementConsent && <EmployeeConsent />}
         <Stack horizontal horizontalAlign="end">
-          <Link
-            href="mailto:VAXn8@downergroup.com?subject=Vax8 app help"
-            styles={{ root: { textDecoration: "none", fontSize: 14 } }}
-          >
+          <Link href={helpEmail} styles={helpEmailStyle}>
             @ Need help ?
           </Link>
         </Stack>

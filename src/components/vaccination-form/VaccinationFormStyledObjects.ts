@@ -1,5 +1,8 @@
+import { AnimationStyles } from "@fluentui/react";
+
 export const vaccinationFormContainerStyle = {
   root: {
+    ...AnimationStyles.fadeIn500,
     width: "70%",
     paddingLeft: 20,
     minHeight: 300,
@@ -13,7 +16,13 @@ export const submitFromBtnStyle = {
     width: 200,
     height: 40,
     borderColor: "#5bc2e7",
-    // marginTop: 50,
-    // marginBottom: 30,
+  },
+};
+
+export const errorMessageBarStyle = {
+  root: { marginBottom: 20 },
+  content: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 };

@@ -16,6 +16,7 @@
   padding-left: 3px;
   padding-top: 4px;
   text-overflow: ellipsis;
+  font-size: 14px;
 }
 
 .inputfile {

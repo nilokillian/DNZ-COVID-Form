@@ -1,6 +1,5 @@
 import { AppDispatch } from "../../index";
 import { IEmployee } from "../../../models/IEmployee";
-
 import {
   SetErrorAction,
   SetEmployeeAction,
@@ -16,6 +15,7 @@ import { composeFlowRequest } from "../../../utils/compose";
 import { ErrorKeyEnum, IError } from "../../../models/IError";
 import EmployeeService from "../../../api/employee.service";
 import { IVerificationCode } from "../../../models/IVerification";
+import { initialEmployeeState, initialVerificationState } from ".";
 
 export const AuthActionCreators = {
   setEmployee: (payload: IEmployee): SetEmployeeAction => ({
@@ -70,6 +70,12 @@ export const AuthActionCreators = {
       }
       dispatch(AuthActionCreators.setAuthLoading(false));
     },
+
+  logout: () => (dispatch: AppDispatch) => {
+    dispatch(AuthActionCreators.setVarification(initialVerificationState));
+    dispatch(AuthActionCreators.setEmployee(initialEmployeeState));
+    dispatch(AuthActionCreators.setIsAuth(false));
+  },
 
   login:
     (firstName: string, lastName: string, employeeNumber: string) =>

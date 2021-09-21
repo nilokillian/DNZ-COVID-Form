@@ -1,20 +1,28 @@
 import { AuthAction, AuthActionsEnum, AuthState } from "./types";
 
+export const initialEmployeeState = {
+  id: null,
+  employeeNumber: "",
+  email: "",
+  lastName: "",
+  mobile: "",
+  privacyStatementConsent: false,
+  firstName: "",
+  businessUnit: { name: "" },
+};
+
+export const initialVerificationState = {
+  code: "",
+  isSent: false,
+  passed: false,
+};
+
 const initialState: AuthState = {
   isAuth: false,
   isLoading: false,
-  verification: { code: "", isSent: false, passed: false },
+  verification: initialVerificationState,
   error: null,
-  employee: {
-    id: 0,
-    employeeNumber: "",
-    email: "",
-    lastName: "",
-    mobile: "",
-    privacyStatementConsent: false,
-    firstName: "",
-    businessUnit: { name: "" },
-  },
+  employee: initialEmployeeState,
 };
 
 export default function authReducer(

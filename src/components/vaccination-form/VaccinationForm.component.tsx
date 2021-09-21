@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Label,
   PrimaryButton,
@@ -13,36 +13,41 @@ import {
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { CalendarInput } from "../../controls/calendar/CalendarInput.component";
-import { ShotsSelection } from "../ShotsSelection.component";
+import { VaccinateStatusSelection } from "../VaccinateStatusSelection.component";
 import { FileInput } from "../../controls/file-input/FileInput";
 import { EmployeeCard } from "../employee-card/EmployeeCard";
 import {
+  errorMessageBarStyle,
   submitFromBtnStyle,
   vaccinationFormContainerStyle,
 } from "./VaccinationFormStyledObjects";
 import { DisplayAttachment } from "../display-attachment/DisplayAttachment.component";
 import { allActionCreators } from "../../store/reducers/action-creators";
-import { ShotsOptionsEnum } from "../../models/IShotsSelection";
-import { VaccinationFormModeEnum } from "../../store/reducers/vaccination/types";
-import { IVaccinationFormState } from "../../models/IVerification";
+import {
+  IVaccinationRecord,
+  ShotsOptionsEnum,
+  VaccinationFormModeEnum,
+} from "../../store/reducers/vaccination/types";
 import VaccinationService from "../../api/vaccination.service";
 import { ErrorKeyEnum } from "../../models/IError";
-
-import "./form.css";
+import { VaccinationFormState } from "../../models/IVaccinationFormState";
+import { useHistory } from "react-router-dom";
+import { RouteNames } from "../../routes";
 
 export const VaccinationForm: FC = (): JSX.Element => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const {
-    vaccination: { isLoading, formMode, error },
+    vaccination: { isLoading, formMode, error, vaccinationRecord },
     auth: { employee },
   } = useTypedSelector((state) => state);
 
-  const [formInputs, setFormInputs] = useState<IVaccinationFormState>({
+  const [formInputs, setFormInputs] = useState<VaccinationFormState>({
     shot: ShotsOptionsEnum.ZERO,
     employeeId: employee.id,
     firstShotDate: null,
-    seconShotDate: null,
+    secondShotDate: null,
     boosterDate: null,
     comment: "",
     attachments: [],
@@ -59,6 +64,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
         if (formInputs.id)
           await VaccinationService.updateVaccination(formInputs.id, formInputs);
       }
+
+      dispatch(allActionCreators.setVaccinationLoading(false));
+      history.push(RouteNames.SUCCESS_PAGE);
     } catch (error) {
       dispatch(
         allActionCreators.setVaccinationError({
@@ -71,7 +79,6 @@ export const VaccinationForm: FC = (): JSX.Element => {
       );
       console.log(error);
     }
-    dispatch(allActionCreators.setVaccinationLoading(false));
   };
 
   const onInputChange = (id: string, value: any) => {
@@ -92,47 +99,41 @@ export const VaccinationForm: FC = (): JSX.Element => {
   const onAttachmentRemove = (name: string) => {
     setFormInputs((prev) => ({
       ...prev,
-      attachment: [...prev.attachments.filter((att) => att.name !== name)],
+      attachments: [...prev.attachments.filter((att) => att.name !== name)],
     }));
   };
 
-  const getVaccination = useCallback(async () => {
-    dispatch(allActionCreators.setVaccinationLoading(true));
-    try {
-      const response = await VaccinationService.getEmployeeVaccination(
-        employee.id
-      );
-      if (response.data) {
-        const vaccination = response.data;
-        dispatch(allActionCreators.setFormMode(VaccinationFormModeEnum.EDIT));
-        setFormInputs(vaccination);
-      } else {
-        dispatch(allActionCreators.setFormMode(VaccinationFormModeEnum.NEW));
-      }
-    } catch (error) {
-      dispatch(
-        allActionCreators.setVaccinationError({
-          [ErrorKeyEnum.GET_VACCINATION]: "Getting vaccination record failed",
-        })
-      );
-      console.log(error);
-    }
-
-    dispatch(allActionCreators.setVaccinationLoading(false));
+  // get existing vax8 record
+  useEffect(() => {
+    if (employee.id) dispatch(allActionCreators.fetchVaccination(employee.id));
   }, [dispatch, employee.id]);
 
+  //set local vax8 state if there is an existing record
   useEffect(() => {
-    getVaccination();
-  }, [getVaccination]);
+    if (vaccinationRecord) {
+      const toState: IVaccinationRecord = {
+        id: vaccinationRecord.id,
+        employeeId: vaccinationRecord.employeeId,
+        shot: vaccinationRecord.shot,
+        firstShotDate: vaccinationRecord.firstShotDate,
+        secondShotDate: vaccinationRecord.secondShotDate,
+        boosterDate: vaccinationRecord.boosterDate,
+        comment: vaccinationRecord.comment,
+        attachments: [],
+      };
+
+      setFormInputs(toState);
+    }
+  }, [vaccinationRecord]);
 
   return (
     <form className="formBody" onSubmit={submitForm}>
       <Stack verticalAlign="start" styles={vaccinationFormContainerStyle}>
         <EmployeeCard />
         <Separator />
-        <ShotsSelection
+        <VaccinateStatusSelection
           id="shot"
-          label="How many shots do you have ?"
+          label="Your current vaccination status"
           value={formInputs.shot}
           onChange={onInputChange}
           disabled={isLoading}
@@ -144,19 +145,19 @@ export const VaccinationForm: FC = (): JSX.Element => {
               formInputs.firstShotDate ? formInputs.firstShotDate : new Date()
             }
             onChange={onDateChange}
-            label="First vaccine date"
+            label="First shot date"
             required
           />
         )}
 
         {formInputs.shot === ShotsOptionsEnum.TWO && (
           <CalendarInput
-            id="seconShotDate"
+            id="secondShotDate"
             value={
-              formInputs.seconShotDate ? formInputs.seconShotDate : new Date()
+              formInputs.secondShotDate ? formInputs.secondShotDate : new Date()
             }
             onChange={onDateChange}
-            label="Second vaccine date"
+            label="Second shot date"
             required
           />
         )}
@@ -169,9 +170,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
             required
           />
         )}
-        <Label>
-          Free text / to enter vaccine info (Pfizer, Astrazeneca etc)
-        </Label>
+        <Label>Comment (vaccine info [Pfizer, Astrazeneca etc])</Label>
         <textarea
           id="comment"
           cols={40}
@@ -181,8 +180,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
           disabled={isLoading}
           style={{ marginLeft: 1 }}
         />
-        <Separator />
-
+        <Stack styles={{ root: { minHeight: 20 } }} />
         <FileInput
           id="attachments"
           inputLabel="Add attachments (vaccine certificate, cards, medical exemption certificates etc)"
@@ -194,20 +192,14 @@ export const VaccinationForm: FC = (): JSX.Element => {
           data={formInputs.attachments}
           onRemove={onAttachmentRemove}
         />
-        <Separator />
+
         {error && (
           <MessageBar
             messageBarType={MessageBarType.error}
             onDismiss={() =>
               dispatch(allActionCreators.setVaccinationError(null))
             }
-            styles={{
-              root: { marginBottom: 20 },
-              content: {
-                alignItems: "center",
-                justifyContent: "center",
-              },
-            }}
+            styles={errorMessageBarStyle}
           >
             <Stack verticalAlign="center">
               <Text variant="small">
@@ -218,7 +210,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
             </Stack>
           </MessageBar>
         )}
-
+        <Stack styles={{ root: { minHeight: 20 } }} />
         <Stack horizontal horizontalAlign="start" tokens={{ childrenGap: 5 }}>
           <PrimaryButton
             text={isLoading ? "Submitting" : "Submit"}

@@ -17,12 +17,25 @@
   border-top-right-radius: 3px;
 }
 
-.login-form-container {
-  background-color: #ffffff61;
-  box-shadow: 0 0 11px rgb(0 0 0 / 12%);
-  padding-top: 10px;
+.login-container {
+  min-height: 350px;
 }
 
 .login-form {
   padding: 20px;
+}
+
+.my-node-enter {
+  opacity: 0;
+}
+.my-node-enter-active {
+  opacity: 1;
+  transition: opacity 700ms;
+}
+.my-node-exit {
+  opacity: 1;
+}
+.my-node-exit-active {
+  opacity: 0;
+  transition: opacity 700ms;
 }

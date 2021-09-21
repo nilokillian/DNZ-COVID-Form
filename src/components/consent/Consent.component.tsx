@@ -1,15 +1,19 @@
 import { FC, useEffect, useState } from "react";
-import { MessageBarType, Text, Link } from "@fluentui/react";
-import { MessageBarContainer } from "../message/Message.component";
+import { MessageBarType, Text, Link, MessageBar } from "@fluentui/react";
 import { privacyHeader } from "../../const/strings";
 import { ModalWindow } from "../modal/Modal.component";
 import { PrivacyStatement } from "../privacy-statement/PrivacyStatement.component";
-import "./consent.css";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { useDispatch } from "react-redux";
 import { allActionCreators } from "../../store/reducers/action-creators";
 import { IEmployee } from "../../models/IEmployee";
 import EmployeeService from "../../api/employee.service";
+import {
+  privacyStatementLinkStyle,
+  privacyStatementMessageBarStyle,
+} from "./consentStyledObjects";
+
+import "./consent.css";
 
 export const EmployeeConsent: FC = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -22,30 +26,33 @@ export const EmployeeConsent: FC = (): JSX.Element => {
       dispatch(allActionCreators.setAuthLoading(true));
 
       const updateEmployee: Partial<IEmployee> = {
-        ...employee,
         privacyStatementConsent: true,
       };
 
-      delete updateEmployee.id;
-
-      EmployeeService.updateEmployee(employee.id, updateEmployee)
-        .then(() => {
-          dispatch(
-            allActionCreators.setEmployee({
-              ...employee,
-              privacyStatementConsent: true,
-            })
-          );
-          dispatch(allActionCreators.setAuthLoading(false));
-          dispatch(allActionCreators.setIsAuth(true));
-        })
-        .catch(() => console.log("error"));
+      //delete updateEmployee.id;
+      if (employee.id)
+        EmployeeService.updateEmployee(employee.id, updateEmployee)
+          .then(() => {
+            dispatch(
+              allActionCreators.setEmployee({
+                ...employee,
+                privacyStatementConsent: true,
+              })
+            );
+            dispatch(allActionCreators.setAuthLoading(false));
+            dispatch(allActionCreators.setIsAuth(true));
+          })
+          .catch(() => console.log("error"));
     }
   }, [privacyConsent, dispatch, employee]);
 
   return (
     <div className="consent-container">
-      <MessageBarContainer messageType={MessageBarType.info}>
+      <MessageBar
+        isMultiline
+        messageBarType={MessageBarType.info}
+        styles={privacyStatementMessageBarStyle}
+      >
         <div>
           <Text variant="smallPlus">
             {privacyHeader} The information that we will collect, and how we
@@ -60,12 +67,12 @@ export const EmployeeConsent: FC = (): JSX.Element => {
           <Link
             onClick={() => setPrivacyStatementModal(true)}
             underline
-            styles={{ root: { fontSize: 14 } }}
+            styles={privacyStatementLinkStyle}
           >
             Read Privacy Statement
           </Link>
         </div>
-      </MessageBarContainer>
+      </MessageBar>
 
       <ModalWindow
         hideModal={() => setPrivacyStatementModal(false)}

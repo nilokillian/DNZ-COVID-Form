@@ -11,28 +11,26 @@ interface IPrivacyStatementProps {
 export const PrivacyStatement: FC<IPrivacyStatementProps> = ({
   hideModal,
   onAgree,
-}) => {
-  return (
-    <div className="privacy-statement-container">
-      <Separator />
-      <div
-        className="privacy-statement-content"
-        dangerouslySetInnerHTML={{ __html: privacyStatementHtml }}
+}) => (
+  <div className="privacy-statement-container">
+    <Separator />
+    <div
+      className="privacy-statement-content"
+      dangerouslySetInnerHTML={{ __html: privacyStatementHtml }}
+    />
+    <Separator />
+    <Stack horizontal horizontalAlign="space-around" wrap>
+      <DefaultButton
+        text="I need to think about"
+        styles={{ root: { minWidth: 150, marginBottom: 20 } }}
+        onClick={hideModal}
       />
-      <Separator />
-      <Stack horizontal horizontalAlign="space-around" wrap>
-        <DefaultButton
-          text="I need to think about"
-          styles={{ root: { minWidth: 150, marginBottom: 20 } }}
-          onClick={hideModal}
-        />
 
-        <DefaultButton
-          text="I confirm that I have read the privacy policy"
-          styles={{ root: { minWidth: 150 } }}
-          onClick={onAgree}
-        />
-      </Stack>
-    </div>
-  );
-};
+      <DefaultButton
+        text="I confirm that I have read the privacy policy"
+        styles={{ root: { minWidth: 150 } }}
+        onClick={onAgree}
+      />
+    </Stack>
+  </div>
+);

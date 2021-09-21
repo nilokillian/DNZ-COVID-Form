@@ -1,9 +1,18 @@
 import { IError } from "../../../models/IError";
 
+export enum ShotsOptionsEnum {
+  ZERO = "zero",
+  ONE = "one",
+  TWO = "two",
+  BOOSTER = "booster",
+  EXEMPTION = "exemption",
+}
+
 export enum VaccinationActionsEnum {
   SET_LOADING = "SET_LOADING",
   SET_ERROR = "SET_ERROR",
   SET_FORM_MODE = "SET_FORM_MODE",
+  SET_VACCINATION_RECORD = "SET_VACCINATION_RECORD",
 }
 
 export enum VaccinationFormModeEnum {
@@ -11,10 +20,33 @@ export enum VaccinationFormModeEnum {
   EDIT = "EDIT",
 }
 
+export interface IAttachment {
+  id: number;
+  name: string;
+  file: string;
+}
+
+export interface IVaccinationRecord {
+  id: number;
+  employeeId: number | null;
+  shot: ShotsOptionsEnum;
+  firstShotDate: Date | null;
+  secondShotDate: Date | null;
+  boosterDate: Date | null;
+  comment: string;
+  attachments: IAttachment[];
+}
+
 export interface VaccinationState {
   formMode: VaccinationFormModeEnum;
   isLoading: boolean;
   error: IError | null;
+  vaccinationRecord: IVaccinationRecord | null;
+}
+
+export interface SetVaccinationRecordAction {
+  type: VaccinationActionsEnum.SET_VACCINATION_RECORD;
+  payload: IVaccinationRecord | null;
 }
 
 export interface SetFormModeAction {
@@ -35,4 +67,5 @@ export interface SetErrorAction {
 export type VaccinationAction =
   | SetLoadingAction
   | SetErrorAction
+  | SetVaccinationRecordAction
   | SetFormModeAction;

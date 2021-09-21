@@ -1,4 +1,6 @@
 import { LoginPage } from "../pages/login.page";
+// import { ProfilePage } from "../pages/profile.page";
+import { SuccessPage } from "../pages/success.page";
 import { VaccinationPage } from "../pages/vaccination.page";
 
 export interface IRoute {
@@ -10,6 +12,8 @@ export interface IRoute {
 export enum RouteNames {
   LOGIN_PAGE = "/login",
   VACCINATION_PAGE = "/",
+  SUCCESS_PAGE = "/success",
+  EMPLOYEE_PROFILE = "EMPLOYEE_PROFILE",
 }
 
 export const publicRoutes: IRoute[] = [
@@ -22,4 +26,15 @@ export const privateRoutes: IRoute[] = [
     exact: true,
     component: VaccinationPage,
   },
+  {
+    path: RouteNames.SUCCESS_PAGE,
+    exact: true,
+    component: SuccessPage,
+  },
+
+  // {
+  //   path: RouteNames.EMPLOYEE_PROFILE,
+  //   exact: true,
+  //   component: ProfilePage,
+  // },
 ];
