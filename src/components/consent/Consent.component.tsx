@@ -29,7 +29,6 @@ export const EmployeeConsent: FC = (): JSX.Element => {
         privacyStatementConsent: true,
       };
 
-      //delete updateEmployee.id;
       if (employee.id)
         EmployeeService.updateEmployee(employee.id, updateEmployee)
           .then(() => {
