@@ -19,13 +19,13 @@ export const EmployeeCard: FC = (): JSX.Element => {
   ) => {
     switch (shotOption) {
       case ShotsOptionsEnum.ONE:
-        return `Vacciantion: First shot taken ${record.firstShotDate}`;
+        return `Vaccination: First shot taken ${record.firstShotDate}`;
 
       case ShotsOptionsEnum.TWO:
-        return `Vacciantion: Two shots taken, last shot date ${record.firstShotDate}`;
+        return `Vaccination: Two shots taken, last shot date ${record.firstShotDate}`;
 
       case ShotsOptionsEnum.BOOSTER:
-        return `Vacciantion: Booster, last shot date ${record.boosterDate}`;
+        return `Vaccination: Booster, last shot date ${record.boosterDate}`;
 
       case ShotsOptionsEnum.EXEMPTION:
         return "You have an exemption";
