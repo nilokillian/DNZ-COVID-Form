@@ -13,19 +13,30 @@ export const EmployeeCard: FC = (): JSX.Element => {
     vaccination: { vaccinationRecord },
   } = useTypedSelector((state) => state);
 
+  const transformDate = (stringDate: Date) => {
+    const data = new Date(stringDate).toLocaleDateString();
+    return data;
+  };
+
   const composeVax8Record = (
     shotOption: ShotsOptionsEnum,
     record: IVaccinationRecord
   ) => {
     switch (shotOption) {
       case ShotsOptionsEnum.ONE:
-        return `Vaccination: First shot taken ${record.firstShotDate}`;
+        return `Vaccination: First shot taken ${
+          record.firstShotDate ? transformDate(record.firstShotDate) : ""
+        }`;
 
       case ShotsOptionsEnum.TWO:
-        return `Vaccination: Two shots taken, last shot date ${record.firstShotDate}`;
+        return `Vaccination: Two shots taken, last shot date ${
+          record.firstShotDate ? transformDate(record.firstShotDate) : ""
+        }`;
 
       case ShotsOptionsEnum.BOOSTER:
-        return `Vaccination: Booster, last shot date ${record.boosterDate}`;
+        return `Vaccination: Booster, last shot date ${
+          record.boosterDate ? transformDate(record.boosterDate) : ""
+        }`;
 
       case ShotsOptionsEnum.EXEMPTION:
         return "You have an exemption";
@@ -35,14 +46,14 @@ export const EmployeeCard: FC = (): JSX.Element => {
     <Stack verticalAlign="center">
       <Label styles={employeeCardLabelStyle}>
         Employee:{" "}
-        {`${employee.firstName} ${employee.lastName} [ No ${employee.employeeNumber} ]`}
+        {`${employee.firstName} ${employee.lastName} [ No${employee.employeeNumber} ]`}
       </Label>
-      <Label styles={employeeCardLabelStyle}>
-        Business unit:{" "}
-        <span>{`${
-          employee.businessUnit ? employee.businessUnit.name : ""
-        }`}</span>
-      </Label>
+      {employee.businessUnit && (
+        <Label styles={employeeCardLabelStyle}>
+          Business unit: <span>{employee.businessUnit.name}</span>
+        </Label>
+      )}
+
       {vaccinationRecord && (
         <Label styles={employeeCardLabelStyle}>
           {composeVax8Record(vaccinationRecord.shot, vaccinationRecord)}

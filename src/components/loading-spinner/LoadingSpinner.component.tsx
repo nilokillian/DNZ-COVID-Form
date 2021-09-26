@@ -6,13 +6,14 @@ export const LoadingSpinner: FC = () => (
     label="Loading..."
     ariaLive="assertive"
     labelPosition="top"
-    size={SpinnerSize.medium}
+    size={SpinnerSize.large}
     styles={{
       root: {
-        top: "80%",
+        top: "35%",
         margin: "auto",
-        left: "50%",
+        left: "46%",
         zIndex: 1000,
+        position: "absolute",
       },
     }}
   />

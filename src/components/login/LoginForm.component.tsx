@@ -57,6 +57,7 @@ export const LoginForm: FC = memo(() => {
 
   return (
     <div className="login-container">
+      {isLoading && <LoadingSpinner />}
       <form className="login-form">
         <Stack
           verticalAlign="center"
@@ -132,17 +133,20 @@ export const LoginForm: FC = memo(() => {
         {!isAuth &&
           verification.passed &&
           !employee.privacyStatementConsent && <EmployeeConsent />}
-      </form>
-      {isLoading && <LoadingSpinner />}
-      <Stack horizontal horizontalAlign="end">
-        <Link
-          href={helpEmail}
-          styles={helpEmailStyle}
-          style={{ paddingRight: 10, paddingBottom: 10 }}
+        <Stack
+          horizontal
+          horizontalAlign="end"
+          styles={{ root: { paddingTop: 20 } }}
         >
-          @ Need help ?
-        </Link>
-      </Stack>
+          <Link
+            href={helpEmail}
+            styles={helpEmailStyle}
+            style={{ paddingRight: 10, paddingBottom: 10 }}
+          >
+            @ Need help ?
+          </Link>
+        </Stack>
+      </form>
     </div>
   );
 });

@@ -5,15 +5,19 @@ import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { VaccinationFormModeEnum } from "../../store/reducers/vaccination/types";
 import { icon } from "../../utils/iconsUtil";
 import { containerStyle, iconStyle, labelStyle } from "./SuccessStyledObject";
+import { useHistory } from "react-router-dom";
+import { RouteNames } from "../../routes";
 
 export const Success: FC = (): JSX.Element => {
   const { formMode } = useTypedSelector((state) => state.vaccination);
   const { logout, setVaccinationRecord, setFormMode } = useAction();
+  const history = useHistory();
 
   const onCleanUp = () => {
     setVaccinationRecord(null);
     setFormMode(VaccinationFormModeEnum.NEW);
     logout();
+    history.push(RouteNames.LOGIN_PAGE);
   };
 
   return (

@@ -27,7 +27,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
       <div
         className="radio"
         style={{
-          padding: "20px 0px 30px",
+          padding: "10px 0px 10px",
         }}
       >
         <Label required={required}>{label}</Label>
@@ -35,6 +35,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
           onSelectDate={onDateChage}
           value={selectedDate}
           strings={defaultCalendarStrings}
+          styles={{ root: { width: "auto" } }}
         />
       </div>
     );

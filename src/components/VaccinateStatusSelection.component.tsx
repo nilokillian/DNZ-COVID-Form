@@ -93,6 +93,7 @@ export const VaccinateStatusSelection: FC<IVaccinateStatusSelectionProps> = ({
       styles: {
         choiceFieldWrapper: { minWidth: 105 },
         labelWrapper: { maxWidth: 66 },
+        field: {},
       },
     }));
 

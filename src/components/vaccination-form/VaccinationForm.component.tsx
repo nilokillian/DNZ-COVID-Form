@@ -127,7 +127,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
   }, [vaccinationRecord]);
 
   return (
-    <form className="formBody" onSubmit={submitForm}>
+    <form className="vax8-form" onSubmit={submitForm}>
       <Stack verticalAlign="start" styles={vaccinationFormContainerStyle}>
         <EmployeeCard />
         <Separator />
