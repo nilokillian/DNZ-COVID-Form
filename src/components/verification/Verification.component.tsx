@@ -53,7 +53,7 @@ export const Verification: FC<IVerificationProps> = ({
 
   return (
     <>
-      {employee.id && !verification.isSent && (
+      {!employee.id && !verification.isSent && (
         <>
           {error && error[ErrorKeyEnum.SEND_CODE] ? (
             <MessageBar messageBarType={MessageBarType.error}>

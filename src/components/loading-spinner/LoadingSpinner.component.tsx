@@ -7,14 +7,14 @@ export const LoadingSpinner: FC = () => (
     ariaLive="assertive"
     labelPosition="top"
     size={SpinnerSize.large}
-    styles={{
-      root: {
-        top: "35%",
-        margin: "auto",
-        left: "46%",
-        zIndex: 1000,
-        position: "absolute",
-      },
-    }}
+    // styles={{
+    //   root: {
+    //     top: "35%",
+    //     margin: "auto",
+    //     left: "46%",
+    //     zIndex: 1000,
+    //     position: "absolute",
+    //   },
+    // }}
   />
 );

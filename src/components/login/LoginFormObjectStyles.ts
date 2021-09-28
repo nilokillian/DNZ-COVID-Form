@@ -11,6 +11,8 @@ export const errorMessageStyle = {
   },
 };
 
+export const helpLink = {};
+
 export const loginBtnStyle = {
   rootHovered: {
     backgroundColor: "#38c8fc",
@@ -34,5 +36,11 @@ export const loginBtnStyle = {
 };
 
 export const helpEmailStyle = {
-  root: { textDecoration: "none", fontSize: 14 },
+  root: {
+    paddingRight: 10,
+    paddingBottom: 10,
+    textDecoration: "none",
+    fontSize: 14,
+    selectors: { [":hover"]: { textDecoration: "none" } },
+  },
 };
