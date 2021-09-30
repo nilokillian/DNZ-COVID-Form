@@ -1,5 +1,3 @@
-import { IBusinessUnit } from "./IBusinessUnit";
-
 export interface IEmployee {
   id: number | null;
   firstName: string;
@@ -8,6 +6,6 @@ export interface IEmployee {
   mobile: string;
   employeeNumber: string;
   privacyStatementConsent: boolean;
-  businessUnit: IBusinessUnit;
+  businessUnit: string;
   siteVisit?: [];
 }

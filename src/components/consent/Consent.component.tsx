@@ -17,7 +17,7 @@ import "./consent.css";
 
 export const EmployeeConsent: FC = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { employee } = useTypedSelector((state) => state.auth);
+  const { employee, token } = useTypedSelector((state) => state.auth);
   const [privacyStatementModal, setPrivacyStatementModal] = useState(false);
   const [privacyConsent, setPrivacyConsent] = useState(false);
 
@@ -30,7 +30,11 @@ export const EmployeeConsent: FC = (): JSX.Element => {
       };
 
       if (employee.id)
-        EmployeeService.updateEmployee(employee.id, updateEmployee)
+        EmployeeService.updateEmployeeConsent(
+          employee.id,
+          updateEmployee,
+          token
+        )
           .then(() => {
             dispatch(
               allActionCreators.setEmployee({

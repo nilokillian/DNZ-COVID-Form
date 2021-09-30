@@ -40,7 +40,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   const {
     vaccination: { isLoading, formMode, error, vaccinationRecord },
-    auth: { employee },
+    auth: { employee, token },
   } = useTypedSelector((state) => state);
 
   const [formInputs, setFormInputs] = useState<VaccinationFormState>({
@@ -59,10 +59,14 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
     try {
       if (formMode === VaccinationFormModeEnum.NEW) {
-        await VaccinationService.createVaccination(formInputs);
+        await VaccinationService.createVaccination(formInputs, token);
       } else {
         if (formInputs.id)
-          await VaccinationService.updateVaccination(formInputs.id, formInputs);
+          await VaccinationService.updateVaccination(
+            formInputs.id,
+            formInputs,
+            token
+          );
       }
 
       dispatch(allActionCreators.setVaccinationLoading(false));
@@ -105,7 +109,8 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   // get existing vax8 record
   useEffect(() => {
-    if (employee.id) dispatch(allActionCreators.fetchVaccination(employee.id));
+    if (employee.id)
+      dispatch(allActionCreators.fetchVaccination(employee.id, token));
   }, [dispatch, employee.id]);
 
   //set local vax8 state if there is an existing record
@@ -113,7 +118,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
     if (vaccinationRecord) {
       const toState: IVaccinationRecord = {
         id: vaccinationRecord.id,
-        employeeId: vaccinationRecord.employeeId,
+        employeeId: employee.id,
         shot: vaccinationRecord.shot,
         firstShotDate: vaccinationRecord.firstShotDate,
         secondShotDate: vaccinationRecord.secondShotDate,

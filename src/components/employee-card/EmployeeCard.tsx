@@ -50,7 +50,7 @@ export const EmployeeCard: FC = (): JSX.Element => {
       </Label>
       {employee.businessUnit && (
         <Label styles={employeeCardLabelStyle}>
-          Business unit: <span>{employee.businessUnit.name}</span>
+          Business unit: <span>{employee.businessUnit}</span>
         </Label>
       )}
 

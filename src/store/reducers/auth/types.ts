@@ -1,10 +1,11 @@
 import { IEmployee } from "../../../models/IEmployee";
 import { IError } from "../../../models/IError";
-import { IVerificationCode } from "../../../models/IVerification";
 
 export interface AuthState {
   isAuth: boolean;
-  verification: IVerificationCode;
+  identified: boolean;
+  token: string;
+  verificationCodeSent: boolean;
   employee: IEmployee;
   isLoading: boolean;
   error: IError | null;
@@ -12,8 +13,11 @@ export interface AuthState {
 
 export enum AuthActionsEnum {
   SET_AUTH = "SET_AUTH",
+  SET_IDENTIFIED = "SET_IDENTIFIED",
+  SET_TOKEN = "SET_TOKEN",
   SET_LOADING = "SET_LOADING",
   SET_EMPLOYEE = "SET_EMPLOYEE",
+  UPDATE_EMPLOYEE = "UPDATE_EMPLOYEE",
   SET_ERROR = "SET_ERROR",
   SET_VERIFICATION = "SET_VERIFICATION",
   CANCEL_VERIFICATION = "CANCEL_VERIFICATION",
@@ -24,14 +28,29 @@ export interface SetAuthAction {
   payload: boolean;
 }
 
+export interface SetTokenAction {
+  type: AuthActionsEnum.SET_TOKEN;
+  payload: string;
+}
+
 export interface SetEmployeeAction {
   type: AuthActionsEnum.SET_EMPLOYEE;
   payload: IEmployee;
 }
 
+export interface UpdateEmployeeAction {
+  type: AuthActionsEnum.UPDATE_EMPLOYEE;
+  payload: Partial<IEmployee>;
+}
+
+export interface SetIdentifiedAction {
+  type: AuthActionsEnum.SET_IDENTIFIED;
+  payload: boolean;
+}
+
 export interface SetVerificationAction {
   type: AuthActionsEnum.SET_VERIFICATION;
-  payload: IVerificationCode;
+  payload: boolean;
 }
 
 export interface CalcelVerificationAction {
@@ -50,6 +69,9 @@ export interface SetErrorAction {
 
 export type AuthAction =
   | SetAuthAction
+  | UpdateEmployeeAction
+  | SetTokenAction
+  | SetIdentifiedAction
   | SetEmployeeAction
   | CalcelVerificationAction
   | SetVerificationAction

@@ -1,8 +1,6 @@
 import {
   MessageBarType,
   PrimaryButton,
-  Spinner,
-  SpinnerSize,
   Stack,
   TextField,
   Text,
@@ -36,9 +34,15 @@ const initLoginState = {
 
 export const LoginForm: FC = memo(() => {
   const { login, setAuthError } = useAction();
-  const { isLoading, employee, error, verification, isAuth } = useTypedSelector(
-    (state) => state.auth
-  );
+  const {
+    isLoading,
+    employee,
+    error,
+    verificationCodeSent,
+    isAuth,
+    identified,
+    token,
+  } = useTypedSelector((state) => state.auth);
   const [loginForm, setLoginForm] = useState<ILoginForm>(() => initLoginState);
 
   const onInputChange = useCallback(
@@ -52,7 +56,7 @@ export const LoginForm: FC = memo(() => {
 
   const onLoginHadler = (): void => {
     const { firstName, lastName, employeeNumber } = loginForm;
-    login(firstName, lastName, employeeNumber);
+    login({ firstName, lastName, employeeNumber });
   };
 
   return (
@@ -106,7 +110,7 @@ export const LoginForm: FC = memo(() => {
                 </Stack>
               </MessageBar>
             )}
-          {!employee.id && (
+          {!identified && (
             <Stack horizontal tokens={{ childrenGap: 10 }}>
               <PrimaryButton
                 text="Login"
@@ -130,7 +134,8 @@ export const LoginForm: FC = memo(() => {
         </Stack>
 
         {!isAuth &&
-          verification.passed &&
+          verificationCodeSent &&
+          token &&
           !employee.privacyStatementConsent && <EmployeeConsent />}
       </form>
       {isLoading && <LoadingSpinner />}

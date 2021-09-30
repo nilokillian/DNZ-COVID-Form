@@ -1,6 +1,6 @@
 import { AppDispatch } from "../..";
 import VaccinationService from "../../../api/vaccination.service";
-import { ErrorKeyEnum, IError } from "../../../models/IError";
+import { IError } from "../../../models/IError";
 import {
   SetLoadingAction,
   SetFormModeAction,
@@ -33,32 +33,32 @@ export const VaccinationActionCreators = {
     payload,
   }),
 
-  fetchVaccination: (employeeId: number) => async (dispatch: AppDispatch) => {
-    dispatch(VaccinationActionCreators.setVaccinationLoading(true));
+  fetchVaccination:
+    (employeeId: number, token: string) => async (dispatch: AppDispatch) => {
+      dispatch(VaccinationActionCreators.setVaccinationLoading(true));
 
-    try {
-      const response = await VaccinationService.getEmployeeVaccination(
-        employeeId
-      );
+      try {
+        const response = await VaccinationService.getEmployeeVaccination(
+          employeeId,
+          token
+        );
 
-      if (response.data) {
         dispatch(VaccinationActionCreators.setVaccinationRecord(response.data));
         dispatch(
           VaccinationActionCreators.setFormMode(VaccinationFormModeEnum.EDIT)
         );
-      } else {
+      } catch (error) {
         dispatch(
           VaccinationActionCreators.setFormMode(VaccinationFormModeEnum.NEW)
         );
-      }
-    } catch (error) {
-      dispatch(
-        VaccinationActionCreators.setVaccinationError({
-          [ErrorKeyEnum.GET_VACCINATION]: "Getting vaccination record failed",
-        })
-      );
-    }
 
-    dispatch(VaccinationActionCreators.setVaccinationLoading(false));
-  },
+        // dispatch(
+        //   VaccinationActionCreators.setVaccinationError({
+        //     [ErrorKeyEnum.GET_VACCINATION]: "Getting vaccination record failed",
+        //   })
+        // );
+      }
+
+      dispatch(VaccinationActionCreators.setVaccinationLoading(false));
+    },
 };

@@ -1,6 +1,6 @@
+import { IEmployee } from "./../../../models/IEmployee";
 import { AppDispatch } from "../../index";
-import { IEmployee } from "../../../models/IEmployee";
-
+import jwt_decode from "jwt-decode";
 import {
   SetErrorAction,
   SetEmployeeAction,
@@ -9,14 +9,13 @@ import {
   AuthActionsEnum,
   SetVerificationAction,
   CalcelVerificationAction,
+  SetIdentifiedAction,
+  SetTokenAction,
 } from "./types";
-import { codeGenerator } from "../../../utils/codeGenerator";
-import VerificationService from "../../../api/verification.service";
-import { composeFlowRequest } from "../../../utils/compose";
 import { ErrorKeyEnum, IError } from "../../../models/IError";
-import EmployeeService from "../../../api/employee.service";
-import { IVerificationCode } from "../../../models/IVerification";
-import { initialEmployeeState, initialVerificationState } from ".";
+import { initialEmployeeState } from ".";
+import { IGetToken, ILogin } from "../../../models/IAuth";
+import AuthService from "../../../api/auth.service";
 
 export const AuthActionCreators = {
   setEmployee: (payload: IEmployee): SetEmployeeAction => ({
@@ -27,6 +26,10 @@ export const AuthActionCreators = {
     type: AuthActionsEnum.SET_AUTH,
     payload,
   }),
+  setIndentified: (payload: boolean): SetIdentifiedAction => ({
+    type: AuthActionsEnum.SET_IDENTIFIED,
+    payload,
+  }),
   setAuthError: (payload: IError | null): SetErrorAction => ({
     type: AuthActionsEnum.SET_ERROR,
     payload,
@@ -35,78 +38,87 @@ export const AuthActionCreators = {
     type: AuthActionsEnum.SET_LOADING,
     payload,
   }),
-  setVarification: (payload: IVerificationCode): SetVerificationAction => ({
+  setVarification: (payload: boolean): SetVerificationAction => ({
     type: AuthActionsEnum.SET_VERIFICATION,
     payload,
   }),
 
-  cancelVerification: (): CalcelVerificationAction => ({
-    type: AuthActionsEnum.CANCEL_VERIFICATION,
+  setToken: (payload: string): SetTokenAction => ({
+    type: AuthActionsEnum.SET_TOKEN,
+    payload,
   }),
 
-  sendVarificationCode:
-    (employee: IEmployee) => async (dispatch: AppDispatch) => {
-      try {
-        dispatch(AuthActionCreators.setAuthLoading(true));
-        dispatch(AuthActionCreators.setAuthError(null));
-        const generatedCode = codeGenerator();
-
-        const verification: IVerificationCode = {
-          code: generatedCode,
-          isSent: true,
-          passed: false,
-        };
-
-        await VerificationService.sendVerificationCode(
-          composeFlowRequest(employee, generatedCode)
-        );
-
-        dispatch(AuthActionCreators.setVarification(verification));
-      } catch (error) {
-        dispatch(
-          AuthActionCreators.setAuthError({
-            [ErrorKeyEnum.SEND_CODE]: "Sending verification code error",
-          })
-        );
-      }
-      dispatch(AuthActionCreators.setAuthLoading(false));
-    },
-
   logout: () => (dispatch: AppDispatch) => {
-    dispatch(AuthActionCreators.setVarification(initialVerificationState));
+    dispatch(AuthActionCreators.setIndentified(false));
+    dispatch(AuthActionCreators.setVarification(false));
     dispatch(AuthActionCreators.setEmployee(initialEmployeeState));
+    dispatch(AuthActionCreators.setToken(""));
     dispatch(AuthActionCreators.setIsAuth(false));
   },
 
-  login:
-    (firstName: string, lastName: string, employeeNumber: string) =>
-    async (dispatch: AppDispatch) => {
+  cancelVerification: () => (dispatch: AppDispatch) => {
+    dispatch(AuthActionCreators.setEmployee(initialEmployeeState));
+    dispatch(AuthActionCreators.setIndentified(false));
+    dispatch(AuthActionCreators.setVarification(false));
+    dispatch(AuthActionCreators.setToken(""));
+  },
+
+  getToken:
+    (code: number, employee: IEmployee) => async (dispatch: AppDispatch) => {
       try {
         dispatch(AuthActionCreators.setAuthLoading(true));
-        const response = await EmployeeService.getEmployee(
-          firstName,
-          lastName,
-          employeeNumber
+        const response = await AuthService.getToken({
+          code,
+          employeeNumber: employee.employeeNumber,
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+        });
+
+        dispatch(AuthActionCreators.setToken(response.data.token));
+        dispatch(
+          AuthActionCreators.setEmployee({
+            id: response.data.employee.id,
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            email: employee.email,
+            mobile: employee.mobile,
+            employeeNumber: employee.employeeNumber,
+            businessUnit: response.data.employee.businessUnit,
+            privacyStatementConsent:
+              response.data.employee.privacyStatementConsent,
+          })
         );
 
-        if (!response.data) {
-          dispatch(
-            AuthActionCreators.setAuthError({
-              [ErrorKeyEnum.EMPLOYEE_NOT_FOUND]:
-                "Employee with the given details was not found",
-            })
-          );
-        } else {
-          dispatch(AuthActionCreators.setAuthError(null));
-          dispatch(AuthActionCreators.setEmployee(response.data));
-        }
+        dispatch(AuthActionCreators.setIsAuth(true));
         dispatch(AuthActionCreators.setAuthLoading(false));
       } catch (error) {
         dispatch(
           AuthActionCreators.setAuthError({
-            [ErrorKeyEnum.GET_EMPLOYEE]: "Something went wrong",
+            [ErrorKeyEnum.INPUT_CODE]: "Entered code is not correct",
           })
         );
       }
     },
+
+  login: (payload: ILogin) => async (dispatch: AppDispatch) => {
+    try {
+      dispatch(AuthActionCreators.setAuthLoading(true));
+
+      const response = await AuthService.login(payload);
+
+      dispatch(AuthActionCreators.setAuthError(null));
+      dispatch(AuthActionCreators.setAuthError(null));
+      dispatch(AuthActionCreators.setEmployee(response.data));
+      dispatch(AuthActionCreators.setIndentified(true));
+      dispatch(AuthActionCreators.setVarification(true));
+      dispatch(AuthActionCreators.setAuthLoading(false));
+    } catch (error) {
+      dispatch(
+        AuthActionCreators.setAuthError({
+          [ErrorKeyEnum.GET_EMPLOYEE]:
+            "Employee with the given details was not found",
+        })
+      );
+    }
+  },
 };
