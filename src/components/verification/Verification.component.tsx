@@ -2,12 +2,8 @@ import {
   MessageBar,
   PrimaryButton,
   DefaultButton,
-  Spinner,
-  SpinnerSize,
   Stack,
   TextField,
-  ActionButton,
-  MessageBarType,
   AnimationStyles,
 } from "@fluentui/react";
 import { FC } from "react";
@@ -15,78 +11,40 @@ import { useAction } from "../../hooks/useAction";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { ErrorKeyEnum } from "../../models/IError";
 import { IVerificationProps } from "../../models/IVerificationProps";
-import { composeMobile } from "../../utils/compose";
-import { icon } from "../../utils/iconsUtil";
 import { sendVerificationCodeStyle } from "./VerificationStylesObjects";
 
 export const Verification: FC<IVerificationProps> = ({
   onChange,
   inputValue,
 }) => {
-  const { isLoading, verification, employee, error } = useTypedSelector(
+  const { isLoading, verificationCodeSent, employee, error } = useTypedSelector(
     (state) => state.auth
   );
-  const {
-    sendVarificationCode,
-    setVarification,
-    setAuthError,
-    setIsAuth,
-    cancelVerification,
-  } = useAction();
+  const { getToken, cancelVerification } = useAction();
 
-  const onSendVerificationHandler = (): void => {
-    sendVarificationCode(employee);
+  const verifyCode = () => {
+    getToken(Number(inputValue), employee);
   };
 
-  const verifyCode = (): void => {
-    if (verification.code === inputValue) {
-      if (employee.privacyStatementConsent) {
-        setVarification({ ...verification, passed: true });
-        setIsAuth(true);
-      } else {
-        setVarification({ ...verification, passed: true });
-      }
-    } else {
-      setAuthError({ [ErrorKeyEnum.INPUT_CODE]: "Code is not correct" });
-    }
+  const onCancelHandler = (e: any) => {
+    e.target.id = "verificationCode";
+    onChange(e, "");
+    cancelVerification();
   };
 
   return (
     <>
-      {!employee.id && !verification.isSent && (
-        <>
-          {error && error[ErrorKeyEnum.SEND_CODE] ? (
-            <MessageBar messageBarType={MessageBarType.error}>
-              {error[ErrorKeyEnum.SEND_CODE]}
-            </MessageBar>
-          ) : (
-            <MessageBar styles={{ root: { ...AnimationStyles.fadeIn400 } }}>
-              {employee.mobile
-                ? composeMobile(employee.mobile)
-                : employee.email}
-            </MessageBar>
-          )}
-          <Stack horizontal tokens={{ childrenGap: 10 }}>
-            <ActionButton
-              onClick={onSendVerificationHandler}
-              iconProps={icon.send}
-              allowDisabledFocus
-              styles={sendVerificationCodeStyle}
-            >
-              Send verification code
-            </ActionButton>
-            {isLoading && <Spinner size={SpinnerSize.large} />}
-          </Stack>
-        </>
-      )}
-
-      {employee.id && verification.isSent && !verification.passed && (
+      {verificationCodeSent && (
         <>
           <MessageBar
             isMultiline
-            styles={{ root: { ...AnimationStyles.fadeIn500 } }}
+            styles={{
+              root: { ...AnimationStyles.fadeIn500, whiteSpace: "pre-line" },
+            }}
           >
-            We have sent a verification code. Please enter it to sign in
+            We have sent a verification code. Please enter it to sign in{" "}
+            &#10;&#13;
+            {employee.mobile ? employee.mobile : employee.email}
           </MessageBar>
           <TextField
             id="verificationCode"
@@ -102,7 +60,7 @@ export const Verification: FC<IVerificationProps> = ({
           <Stack horizontal tokens={{ childrenGap: 20 }}>
             <DefaultButton
               text="Cancel"
-              onClick={cancelVerification}
+              onClick={(e) => onCancelHandler(e)}
               styles={{ root: { ...AnimationStyles.slideRightIn400 } }}
             />
             <PrimaryButton
