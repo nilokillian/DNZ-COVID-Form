@@ -35,6 +35,7 @@ export const VaccinationActionCreators = {
 
   fetchVaccination:
     (employeeId: number, token: string) => async (dispatch: AppDispatch) => {
+      console.log("employeeId", employeeId);
       dispatch(VaccinationActionCreators.setVaccinationLoading(true));
 
       try {

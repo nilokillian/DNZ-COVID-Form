@@ -61,9 +61,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
       if (formMode === VaccinationFormModeEnum.NEW) {
         await VaccinationService.createVaccination(formInputs, token);
       } else {
-        if (formInputs.id)
+        if (employee.id)
           await VaccinationService.updateVaccination(
-            formInputs.id,
+            employee.id,
             formInputs,
             token
           );

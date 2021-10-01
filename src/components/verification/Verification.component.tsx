@@ -11,7 +11,7 @@ import { useAction } from "../../hooks/useAction";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { ErrorKeyEnum } from "../../models/IError";
 import { IVerificationProps } from "../../models/IVerificationProps";
-import { sendVerificationCodeStyle } from "./VerificationStylesObjects";
+// import { sendVerificationCodeStyle } from "./VerificationStylesObjects";
 
 export const Verification: FC<IVerificationProps> = ({
   onChange,
