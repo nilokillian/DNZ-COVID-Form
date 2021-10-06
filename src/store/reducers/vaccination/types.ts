@@ -23,6 +23,7 @@ export enum VaccinationFormModeEnum {
 export enum Vaccine {
   ASTRAZENECA = "Astrazeneca",
   PFIZER = "Pfizer",
+  MODERNA = "Moderna",
 }
 
 export interface IAttachment {

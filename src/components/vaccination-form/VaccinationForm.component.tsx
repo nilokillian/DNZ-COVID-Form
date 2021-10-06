@@ -182,6 +182,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
       const toState: IVaccinationRecord = {
         shot: vaccinationRecord.shot,
         vaccine: vaccinationRecord.vaccine,
+        // vaccine: vaccinationRecord.vaccine === null ? "": vaccinationRecord.vaccine,
         firstShotDate: vaccinationRecord.firstShotDate,
         secondShotDate: vaccinationRecord.secondShotDate,
         boosterDate: vaccinationRecord.boosterDate,
@@ -210,9 +211,11 @@ export const VaccinationForm: FC = (): JSX.Element => {
             <VaccineSelection
               id="vaccine"
               label="Vaccine"
-              value={formInputs.vaccine !== null ? formInputs.vaccine : ""}
+              value={formInputs.vaccine}
               onChange={onInputChange}
-              isDisabled={formMode === VaccinationFormModeEnum.EDIT}
+              isDisabled={
+                vaccinationRecord !== null && !!vaccinationRecord.vaccine
+              }
             />
           )}
 

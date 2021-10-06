@@ -8,13 +8,14 @@ import { Vaccine } from "../store/reducers/vaccination/types";
 const options: IChoiceGroupOption[] = [
   { key: Vaccine.PFIZER, text: Vaccine.PFIZER },
   { key: Vaccine.ASTRAZENECA, text: Vaccine.ASTRAZENECA },
+  { key: Vaccine.MODERNA, text: Vaccine.MODERNA },
 ];
 
 export interface IVaccineNameSelectionProps {
   id: string;
   label: string;
   onChange: (id: string, value: string) => void;
-  value: string;
+  value: string | null;
   isDisabled: boolean;
 }
 
@@ -36,7 +37,7 @@ export const VaccineSelection: React.FC<IVaccineNameSelectionProps> = ({
 
   return (
     <ChoiceGroup
-      selectedKey={value}
+      selectedKey={value === null ? "" : value}
       options={options}
       onChange={onVaccineChange}
       label={label}
