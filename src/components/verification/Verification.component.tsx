@@ -21,9 +21,8 @@ export const Verification: FC<IVerificationProps> = ({
   onChange,
   inputValue,
 }) => {
-  const { isLoading, verificationCodeSent, employee, error } = useTypedSelector(
-    (state) => state.auth
-  );
+  const { isLoading, verificationCodeSent, token, employee, error } =
+    useTypedSelector((state) => state.auth);
   const { getToken, cancelVerification } = useAction();
 
   const verifyCode = () => {
@@ -40,7 +39,7 @@ export const Verification: FC<IVerificationProps> = ({
 
   return (
     <>
-      {verificationCodeSent && (
+      {verificationCodeSent && !token && (
         <>
           <MessageBar isMultiline styles={verificationMessageBarStyle}>
             We have sent a verification code. Please enter it to sign in{" "}

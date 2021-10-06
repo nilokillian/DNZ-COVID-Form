@@ -65,6 +65,7 @@ export const AuthActionCreators = {
     (code: number, employee: IEmployee) => async (dispatch: AppDispatch) => {
       try {
         dispatch(AuthActionCreators.setAuthLoading(true));
+        dispatch(AuthActionCreators.setAuthError(null));
         const response = await AuthService.getToken({
           code,
           employeeNumber: employee.employeeNumber,
