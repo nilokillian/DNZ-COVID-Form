@@ -4,14 +4,18 @@ import {
   DefaultButton,
   Stack,
   TextField,
-  AnimationStyles,
 } from "@fluentui/react";
 import { FC } from "react";
 import { useAction } from "../../hooks/useAction";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
 import { ErrorKeyEnum } from "../../models/IError";
 import { IVerificationProps } from "../../models/IVerificationProps";
-// import { sendVerificationCodeStyle } from "./VerificationStylesObjects";
+import {
+  cancelBtnStyle,
+  verificationCodeOnputStyle,
+  verificationMessageBarStyle,
+  verifyBtnStyle,
+} from "./VerificationStylesObjects";
 
 export const Verification: FC<IVerificationProps> = ({
   onChange,
@@ -23,7 +27,9 @@ export const Verification: FC<IVerificationProps> = ({
   const { getToken, cancelVerification } = useAction();
 
   const verifyCode = () => {
-    getToken(Number(inputValue), employee);
+    if (employee) {
+      getToken(Number(inputValue), employee);
+    }
   };
 
   const onCancelHandler = (e: any) => {
@@ -36,15 +42,12 @@ export const Verification: FC<IVerificationProps> = ({
     <>
       {verificationCodeSent && (
         <>
-          <MessageBar
-            isMultiline
-            styles={{
-              root: { ...AnimationStyles.fadeIn500, whiteSpace: "pre-line" },
-            }}
-          >
+          <MessageBar isMultiline styles={verificationMessageBarStyle}>
             We have sent a verification code. Please enter it to sign in{" "}
             &#10;&#13;
-            {employee.mobile ? employee.mobile : employee.email}
+            {employee && employee.mobile
+              ? employee.mobile
+              : employee && employee.email}
           </MessageBar>
           <TextField
             id="verificationCode"
@@ -55,19 +58,20 @@ export const Verification: FC<IVerificationProps> = ({
             value={inputValue}
             onChange={onChange}
             errorMessage={error ? error[ErrorKeyEnum.INPUT_CODE] : ""}
-            styles={{ root: { ...AnimationStyles.slideRightIn400 } }}
+            styles={verificationCodeOnputStyle}
           />
           <Stack horizontal tokens={{ childrenGap: 20 }}>
             <DefaultButton
               text="Cancel"
               onClick={(e) => onCancelHandler(e)}
-              styles={{ root: { ...AnimationStyles.slideRightIn400 } }}
+              styles={cancelBtnStyle}
+              disabled={isLoading}
             />
             <PrimaryButton
               text="Verify"
-              disabled={!inputValue}
+              disabled={!inputValue || isLoading}
               onClick={verifyCode}
-              styles={{ root: { ...AnimationStyles.slideRightIn400 } }}
+              styles={verifyBtnStyle}
             />
           </Stack>
         </>

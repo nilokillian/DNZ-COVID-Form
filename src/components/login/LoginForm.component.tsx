@@ -71,7 +71,7 @@ export const LoginForm: FC = memo(() => {
             id="firstName"
             label="Legal first name"
             required
-            disabled={!!employee.id}
+            disabled={employee === null}
             value={loginForm.firstName}
             onChange={onInputChange}
           />
@@ -79,7 +79,7 @@ export const LoginForm: FC = memo(() => {
             id="lastName"
             label="Last name"
             required
-            disabled={!!employee.id}
+            disabled={employee === null}
             value={loginForm.lastName}
             onChange={onInputChange}
           />
@@ -90,7 +90,7 @@ export const LoginForm: FC = memo(() => {
             required
             value={loginForm.employeeNumber}
             onChange={onInputChange}
-            disabled={!!employee.id}
+            disabled={employee === null}
           />
 
           <Separator />
@@ -123,7 +123,6 @@ export const LoginForm: FC = memo(() => {
                 ])}
                 styles={loginBtnStyle}
               />
-              {/* {isLoading && <Spinner size={SpinnerSize.large} />} */}
             </Stack>
           )}
 
@@ -133,9 +132,9 @@ export const LoginForm: FC = memo(() => {
           />
         </Stack>
 
-        {!isAuth &&
-          verificationCodeSent &&
+        {verificationCodeSent &&
           token &&
+          employee &&
           !employee.privacyStatementConsent && <EmployeeConsent />}
       </form>
       {isLoading && <LoadingSpinner />}

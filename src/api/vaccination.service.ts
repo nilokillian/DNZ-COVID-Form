@@ -3,8 +3,22 @@ import { apiBase } from ".";
 import { VaccinationFormState } from "../models/IVaccinationFormState";
 import { IVaccinationRecord } from "../store/reducers/vaccination/types";
 
+export class Vax8Error {
+  statusCode: number;
+  message: string;
+
+  constructor(res: { statusCode: number; message: string }) {
+    this.statusCode = res.statusCode;
+    this.message = res.message;
+  }
+}
+
+export interface CreateVaccinationDto extends VaccinationFormState {
+  employeeId: number;
+}
+
 export default class VaccinationService {
-  static async createVaccination(data: VaccinationFormState, token: string) {
+  static async createVaccination(data: CreateVaccinationDto, token: string) {
     const config = {
       headers: { Authorization: `Bearer ${token}` },
     };
@@ -17,14 +31,22 @@ export default class VaccinationService {
         config
       );
     } catch (error) {
-      console.log(error);
-      throw new Error("Error saving vax record");
+      if (axios.isAxiosError(error)) {
+        throw new Vax8Error(error.response?.data);
+      }
+
+      throw new Vax8Error({
+        statusCode: 503,
+        message: "Creating employee vaccination record failed",
+      });
     }
   }
 
   static async getEmployeeVaccination(employeeId: number, token: string) {
     const config = {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     };
 
     try {
@@ -33,8 +55,14 @@ export default class VaccinationService {
         config
       );
     } catch (error) {
-      console.log(error);
-      throw new Error("Error getting vax8 for employee");
+      if (axios.isAxiosError(error)) {
+        throw new Vax8Error(error.response?.data);
+      }
+
+      throw new Vax8Error({
+        statusCode: 503,
+        message: "Getting employee vaccination record failed",
+      });
     }
   }
 
@@ -55,8 +83,14 @@ export default class VaccinationService {
         config
       );
     } catch (error) {
-      console.log(error);
-      throw new Error("Error updating vax8 record");
+      if (axios.isAxiosError(error)) {
+        throw new Vax8Error(error.response?.data);
+      }
+
+      throw new Vax8Error({
+        statusCode: 503,
+        message: "Updating employee vaccination record failed",
+      });
     }
   }
 }

@@ -6,7 +6,7 @@ export interface AuthState {
   identified: boolean;
   token: string;
   verificationCodeSent: boolean;
-  employee: IEmployee;
+  employee: IEmployee | undefined;
   isLoading: boolean;
   error: IError | null;
 }
@@ -35,7 +35,7 @@ export interface SetTokenAction {
 
 export interface SetEmployeeAction {
   type: AuthActionsEnum.SET_EMPLOYEE;
-  payload: IEmployee;
+  payload: IEmployee | undefined;
 }
 
 export interface UpdateEmployeeAction {

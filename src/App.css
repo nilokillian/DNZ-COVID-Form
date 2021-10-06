@@ -33,13 +33,18 @@
   /* min-height: 350px; */
   /* height: 90%; */
 }
+.consent-container {
+  padding-top: 20px;
+}
+
+button:active {
+  background-color: #38c8fc !important;
+  border-color: #38c8fc !important;
+}
 
 .login-form {
   max-width: 450px;
   padding: 20px;
-  /* padding-top: 50px; */
-  /* height: inherit; */
-  /* margin-top: 50px; */
 }
 
 .vax8-form {
@@ -47,7 +52,7 @@
   padding: 10px;
 }
 
-.my-node-enter {
+/* .my-node-enter {
   opacity: 0;
 }
 .my-node-enter-active {
@@ -60,4 +65,4 @@
 .my-node-exit-active {
   opacity: 0;
   transition: opacity 700ms;
-}
+} */

@@ -1,6 +1,8 @@
 import { AppDispatch } from "../..";
-import VaccinationService from "../../../api/vaccination.service";
-import { IError } from "../../../models/IError";
+import VaccinationService, {
+  Vax8Error,
+} from "../../../api/vaccination.service";
+import { ErrorKeyEnum, IError } from "../../../models/IError";
 import {
   SetLoadingAction,
   SetFormModeAction,
@@ -35,7 +37,6 @@ export const VaccinationActionCreators = {
 
   fetchVaccination:
     (employeeId: number, token: string) => async (dispatch: AppDispatch) => {
-      console.log("employeeId", employeeId);
       dispatch(VaccinationActionCreators.setVaccinationLoading(true));
 
       try {
@@ -49,15 +50,18 @@ export const VaccinationActionCreators = {
           VaccinationActionCreators.setFormMode(VaccinationFormModeEnum.EDIT)
         );
       } catch (error) {
-        dispatch(
-          VaccinationActionCreators.setFormMode(VaccinationFormModeEnum.NEW)
-        );
-
-        // dispatch(
-        //   VaccinationActionCreators.setVaccinationError({
-        //     [ErrorKeyEnum.GET_VACCINATION]: "Getting vaccination record failed",
-        //   })
-        // );
+        if (error instanceof Vax8Error && error.statusCode === 404) {
+          dispatch(
+            VaccinationActionCreators.setFormMode(VaccinationFormModeEnum.NEW)
+          );
+        } else {
+          dispatch(
+            VaccinationActionCreators.setVaccinationError({
+              [ErrorKeyEnum.GET_VACCINATION]:
+                "Getting vaccination record failed",
+            })
+          );
+        }
       }
 
       dispatch(VaccinationActionCreators.setVaccinationLoading(false));

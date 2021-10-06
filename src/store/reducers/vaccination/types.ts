@@ -20,6 +20,11 @@ export enum VaccinationFormModeEnum {
   EDIT = "EDIT",
 }
 
+export enum Vaccine {
+  ASTRAZENECA = "Astrazeneca",
+  PFIZER = "Pfizer",
+}
+
 export interface IAttachment {
   id: number;
   name: string;
@@ -27,9 +32,8 @@ export interface IAttachment {
 }
 
 export interface IVaccinationRecord {
-  id: number;
-  employeeId: number | null;
   shot: ShotsOptionsEnum;
+  vaccine: Vaccine | "";
   firstShotDate: Date | null;
   secondShotDate: Date | null;
   boosterDate: Date | null;

@@ -1,6 +1,5 @@
 import { IEmployee } from "./../../../models/IEmployee";
 import { AppDispatch } from "../../index";
-import jwt_decode from "jwt-decode";
 import {
   SetErrorAction,
   SetEmployeeAction,
@@ -8,17 +7,16 @@ import {
   SetLoadingAction,
   AuthActionsEnum,
   SetVerificationAction,
-  CalcelVerificationAction,
   SetIdentifiedAction,
   SetTokenAction,
 } from "./types";
 import { ErrorKeyEnum, IError } from "../../../models/IError";
-import { initialEmployeeState } from ".";
-import { IGetToken, ILogin } from "../../../models/IAuth";
+// import { initialEmployeeState } from ".";
+import { ILogin } from "../../../models/IAuth";
 import AuthService from "../../../api/auth.service";
 
 export const AuthActionCreators = {
-  setEmployee: (payload: IEmployee): SetEmployeeAction => ({
+  setEmployee: (payload: IEmployee | undefined): SetEmployeeAction => ({
     type: AuthActionsEnum.SET_EMPLOYEE,
     payload,
   }),
@@ -51,13 +49,13 @@ export const AuthActionCreators = {
   logout: () => (dispatch: AppDispatch) => {
     dispatch(AuthActionCreators.setIndentified(false));
     dispatch(AuthActionCreators.setVarification(false));
-    dispatch(AuthActionCreators.setEmployee(initialEmployeeState));
+    dispatch(AuthActionCreators.setEmployee(undefined));
     dispatch(AuthActionCreators.setToken(""));
     dispatch(AuthActionCreators.setIsAuth(false));
   },
 
   cancelVerification: () => (dispatch: AppDispatch) => {
-    dispatch(AuthActionCreators.setEmployee(initialEmployeeState));
+    dispatch(AuthActionCreators.setEmployee(undefined));
     dispatch(AuthActionCreators.setIndentified(false));
     dispatch(AuthActionCreators.setVarification(false));
     dispatch(AuthActionCreators.setToken(""));
@@ -89,7 +87,10 @@ export const AuthActionCreators = {
           })
         );
 
-        dispatch(AuthActionCreators.setIsAuth(true));
+        if (response.data.employee.privacyStatementConsent) {
+          dispatch(AuthActionCreators.setIsAuth(true));
+        }
+
         dispatch(AuthActionCreators.setAuthLoading(false));
       } catch (error) {
         dispatch(

@@ -8,11 +8,7 @@ export default class AuthService {
     try {
       return await axios.post<IEmployee>(`${apiBase}/_api/auth/login`, payload);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        throw new Error(error.message);
-      } else {
-        throw new Error("Sorry, can't login. Seems like somethign went wrong");
-      }
+      throw new Error("Sorry, can't login. Seems like something went wrong");
     }
   }
 
@@ -20,7 +16,6 @@ export default class AuthService {
     try {
       return await axios.post(`${apiBase}/_api/auth/token`, payload);
     } catch (error) {
-      console.log(error);
       throw new Error("Error fetching token");
     }
   }

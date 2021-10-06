@@ -1,3 +1,4 @@
+//import { IEmployee } from "../../../models/IEmployee";
 import { AuthAction, AuthActionsEnum, AuthState } from "./types";
 
 // export interface IIdentifiedEmployee  {
@@ -9,16 +10,16 @@ import { AuthAction, AuthActionsEnum, AuthState } from "./types";
 //   hiddenEmail:string| "";
 // }
 
-export const initialEmployeeState = {
-  id: null,
-  firstName: "",
-  lastName: "",
-  employeeNumber: "",
-  email: "",
-  mobile: "",
-  privacyStatementConsent: false,
-  businessUnit: "",
-};
+// export const initialEmployeeState = {
+//   id: 0,
+//   firstName: "",
+//   lastName: "",
+//   employeeNumber: "",
+//   email: "",
+//   mobile: "",
+//   privacyStatementConsent: false,
+//   businessUnit: "",
+// };
 
 const initialState: AuthState = {
   isAuth: false,
@@ -27,7 +28,7 @@ const initialState: AuthState = {
   token: "",
   verificationCodeSent: false,
   error: null,
-  employee: initialEmployeeState,
+  employee: undefined,
 };
 
 export default function authReducer(

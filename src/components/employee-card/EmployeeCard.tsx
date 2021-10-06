@@ -46,9 +46,11 @@ export const EmployeeCard: FC = (): JSX.Element => {
     <Stack verticalAlign="center">
       <Label styles={employeeCardLabelStyle}>
         Employee:{" "}
-        {`${employee.firstName} ${employee.lastName} [ No${employee.employeeNumber} ]`}
+        {employee
+          ? `${employee.firstName} ${employee.lastName} [ No${employee.employeeNumber} ]`
+          : ""}
       </Label>
-      {employee.businessUnit && (
+      {employee && employee.businessUnit && (
         <Label styles={employeeCardLabelStyle}>
           Business unit: <span>{employee.businessUnit}</span>
         </Label>

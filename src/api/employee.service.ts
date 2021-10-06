@@ -14,12 +14,11 @@ export default class EmployeeService {
       };
 
       return await axios.put(
-        `${apiBase}/_api/employees/${id}consent`,
+        `${apiBase}/_api/employees/${id}/consent`,
         employee,
         config
       );
     } catch (error) {
-      console.log(error);
       throw new Error("Error updating employee");
     }
   }

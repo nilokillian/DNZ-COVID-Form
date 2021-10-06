@@ -1,4 +1,4 @@
-import { AnimationStyles } from "@fluentui/react";
+import { AnimationStyles, IButtonStyles } from "@fluentui/react";
 
 export const vaccinationFormContainerStyle = {
   root: {
@@ -7,7 +7,7 @@ export const vaccinationFormContainerStyle = {
   },
 };
 
-export const submitFromBtnStyle = {
+export const submitFromBtnStyle: IButtonStyles = {
   rootHovered: {
     backgroundColor: "#38c8fc",
     borderColor: "#38c8fc",
@@ -15,7 +15,6 @@ export const submitFromBtnStyle = {
   root: {
     backgroundColor: "#5bc2e7",
     width: 200,
-
     borderColor: "#5bc2e7",
   },
 };

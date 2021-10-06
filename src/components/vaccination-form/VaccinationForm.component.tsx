@@ -28,15 +28,18 @@ import {
   ShotsOptionsEnum,
   VaccinationFormModeEnum,
 } from "../../store/reducers/vaccination/types";
-import VaccinationService from "../../api/vaccination.service";
+import VaccinationService, { Vax8Error } from "../../api/vaccination.service";
 import { ErrorKeyEnum } from "../../models/IError";
 import { VaccinationFormState } from "../../models/IVaccinationFormState";
 import { useHistory } from "react-router-dom";
 import { RouteNames } from "../../routes";
+import { VaccineSelection } from "../VaccineSelection.component";
+import { useAction } from "../../hooks/useAction";
 
 export const VaccinationForm: FC = (): JSX.Element => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { logout, setVaccinationRecord } = useAction();
 
   const {
     vaccination: { isLoading, formMode, error, vaccinationRecord },
@@ -45,7 +48,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   const [formInputs, setFormInputs] = useState<VaccinationFormState>({
     shot: ShotsOptionsEnum.ZERO,
-    employeeId: employee.id,
+    vaccine: "",
     firstShotDate: null,
     secondShotDate: null,
     boosterDate: null,
@@ -58,10 +61,13 @@ export const VaccinationForm: FC = (): JSX.Element => {
     dispatch(allActionCreators.setVaccinationLoading(true));
 
     try {
-      if (formMode === VaccinationFormModeEnum.NEW) {
-        await VaccinationService.createVaccination(formInputs, token);
+      if (formMode === VaccinationFormModeEnum.NEW && employee) {
+        await VaccinationService.createVaccination(
+          { ...formInputs, employeeId: employee.id },
+          token
+        );
       } else {
-        if (employee.id)
+        if (employee)
           await VaccinationService.updateVaccination(
             employee.id,
             formInputs,
@@ -72,16 +78,23 @@ export const VaccinationForm: FC = (): JSX.Element => {
       dispatch(allActionCreators.setVaccinationLoading(false));
       history.push(RouteNames.SUCCESS_PAGE);
     } catch (error) {
-      dispatch(
-        allActionCreators.setVaccinationError({
-          [formMode === VaccinationFormModeEnum.NEW
-            ? ErrorKeyEnum.CREATE_VACCINATION
-            : ErrorKeyEnum.UPDATE_VACCINATION]: `${
-            formMode === VaccinationFormModeEnum.NEW ? "Creating " : "Updating "
-          }vaccination record failed`,
-        })
-      );
-      console.log(error);
+      if (error instanceof Vax8Error && error.statusCode === 401) {
+        logout();
+        setVaccinationRecord(null);
+        history.push(RouteNames.LOGIN_PAGE);
+      } else {
+        dispatch(
+          allActionCreators.setVaccinationError({
+            [formMode === VaccinationFormModeEnum.NEW
+              ? ErrorKeyEnum.CREATE_VACCINATION
+              : ErrorKeyEnum.UPDATE_VACCINATION]: `${
+              formMode === VaccinationFormModeEnum.NEW
+                ? "Creating "
+                : "Updating "
+            }vaccination record failed`,
+          })
+        );
+      }
     }
   };
 
@@ -109,17 +122,66 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   // get existing vax8 record
   useEffect(() => {
-    if (employee.id)
+    if (employee)
       dispatch(allActionCreators.fetchVaccination(employee.id, token));
-  }, [dispatch, employee.id]);
+  }, [dispatch, employee]);
+
+  // set
+  useEffect(() => {
+    switch (formInputs.shot) {
+      case ShotsOptionsEnum.ONE:
+        setFormInputs({
+          ...formInputs,
+          firstShotDate: new Date(),
+          secondShotDate: vaccinationRecord
+            ? vaccinationRecord.secondShotDate
+            : null,
+          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : null,
+        });
+        break;
+      case ShotsOptionsEnum.TWO:
+        setFormInputs({
+          ...formInputs,
+          secondShotDate: new Date(),
+          firstShotDate: vaccinationRecord
+            ? vaccinationRecord.firstShotDate
+            : null,
+          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : null,
+        });
+        break;
+      case ShotsOptionsEnum.BOOSTER:
+        setFormInputs({
+          ...formInputs,
+          boosterDate: new Date(),
+          firstShotDate: vaccinationRecord
+            ? vaccinationRecord.firstShotDate
+            : null,
+          secondShotDate: vaccinationRecord
+            ? vaccinationRecord.secondShotDate
+            : null,
+        });
+        break;
+      default:
+        setFormInputs({
+          ...formInputs,
+          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : null,
+          firstShotDate: vaccinationRecord
+            ? vaccinationRecord.firstShotDate
+            : null,
+          secondShotDate: vaccinationRecord
+            ? vaccinationRecord.secondShotDate
+            : null,
+        });
+        break;
+    }
+  }, [formInputs.shot]);
 
   //set local vax8 state if there is an existing record
   useEffect(() => {
     if (vaccinationRecord) {
       const toState: IVaccinationRecord = {
-        id: vaccinationRecord.id,
-        employeeId: employee.id,
         shot: vaccinationRecord.shot,
+        vaccine: vaccinationRecord.vaccine,
         firstShotDate: vaccinationRecord.firstShotDate,
         secondShotDate: vaccinationRecord.secondShotDate,
         boosterDate: vaccinationRecord.boosterDate,
@@ -143,6 +205,17 @@ export const VaccinationForm: FC = (): JSX.Element => {
           onChange={onInputChange}
           disabled={isLoading}
         />
+        {formInputs.shot !== ShotsOptionsEnum.EXEMPTION &&
+          formInputs.shot !== ShotsOptionsEnum.ZERO && (
+            <VaccineSelection
+              id="vaccine"
+              label="Vaccine"
+              value={formInputs.vaccine}
+              onChange={onInputChange}
+              isDisabled={formMode === VaccinationFormModeEnum.EDIT}
+            />
+          )}
+
         {formInputs.shot === ShotsOptionsEnum.ONE && (
           <CalendarInput
             id="firstShotDate"
@@ -175,7 +248,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
             required
           />
         )}
-        <Label>Comment (vaccine info [Pfizer, Astrazeneca etc])</Label>
+        <Label>Employee comment</Label>
         <textarea
           id="comment"
           cols={40}
@@ -225,7 +298,6 @@ export const VaccinationForm: FC = (): JSX.Element => {
           />
           {isLoading && <Spinner size={SpinnerSize.large} />}
         </Stack>
-        <div style={{ marginBottom: 30 }}></div>
       </Stack>
     </form>
   );

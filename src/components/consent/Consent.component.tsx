@@ -29,7 +29,7 @@ export const EmployeeConsent: FC = (): JSX.Element => {
         privacyStatementConsent: true,
       };
 
-      if (employee.id)
+      if (employee)
         EmployeeService.updateEmployeeConsent(
           employee.id,
           updateEmployee,
