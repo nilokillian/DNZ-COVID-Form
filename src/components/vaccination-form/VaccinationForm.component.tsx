@@ -48,7 +48,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   const [formInputs, setFormInputs] = useState<VaccinationFormState>({
     shot: ShotsOptionsEnum.ZERO,
-    vaccine: "",
+    vaccine: null,
     firstShotDate: null,
     secondShotDate: null,
     boosterDate: null,
@@ -126,7 +126,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
       dispatch(allActionCreators.fetchVaccination(employee.id, token));
   }, [dispatch, employee]);
 
-  // set
+  // Set /Re-set dates if Shot options switches
   useEffect(() => {
     switch (formInputs.shot) {
       case ShotsOptionsEnum.ONE:
@@ -210,7 +210,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
             <VaccineSelection
               id="vaccine"
               label="Vaccine"
-              value={formInputs.vaccine}
+              value={formInputs.vaccine !== null ? formInputs.vaccine : ""}
               onChange={onInputChange}
               isDisabled={formMode === VaccinationFormModeEnum.EDIT}
             />
