@@ -30,7 +30,7 @@ export const EmployeeCard: FC = (): JSX.Element => {
 
       case ShotsOptionsEnum.TWO:
         return `Vaccination: Two shots taken, last shot date ${
-          record.firstShotDate ? transformDate(record.firstShotDate) : ""
+          record.secondShotDate ? transformDate(record.secondShotDate) : ""
         }`;
 
       case ShotsOptionsEnum.BOOSTER:
