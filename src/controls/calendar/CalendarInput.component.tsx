@@ -1,12 +1,12 @@
-import React from "react";
-import { Calendar, defaultCalendarStrings, Label } from "@fluentui/react";
+import React, { useCallback } from "react";
+import { DatePicker, defaultCalendarStrings, Label } from "@fluentui/react";
 
 export interface ICalendarInputProps {
   id: string;
   label: string;
-  value: Date;
+  value: string;
   required: boolean;
-  onChange: (id: string, value: Date) => void;
+  onChange: (id: string, value: string) => void;
 }
 
 export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
@@ -15,10 +15,24 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
       value ? new Date(value) : new Date()
     );
 
-    const onDateChage = React.useCallback(
-      (date: Date, _selectedDateRangeArray?: Date[] | undefined): void => {
-        setSelectedDate(date);
-        onChange(id, date);
+    const onFormatDate = (date?: Date): string => {
+      return !date
+        ? ""
+        : date.getDate() +
+            "/" +
+            (date.getMonth() + 1) +
+            "/" +
+            date.getFullYear();
+    };
+
+    const onDateChage = useCallback(
+      (date: Date | null | undefined): void => {
+        if (date && date !== null) {
+          const splitDate = date.toLocaleString().split(",")[0].split("/");
+          const stringDate = `${splitDate[2]}-${splitDate[0]}-${splitDate[1]}`;
+          setSelectedDate(date);
+          onChange(id, stringDate);
+        }
       },
       [onChange, id]
     );
@@ -31,10 +45,11 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
         }}
       >
         <Label required={required}>{label}</Label>
-        <Calendar
+        <DatePicker
           onSelectDate={onDateChage}
           value={selectedDate}
           strings={defaultCalendarStrings}
+          formatDate={onFormatDate}
           styles={{ root: { width: "auto" } }}
         />
       </div>

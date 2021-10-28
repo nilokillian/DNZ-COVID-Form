@@ -13,9 +13,9 @@ export const EmployeeCard: FC = (): JSX.Element => {
     vaccination: { vaccinationRecord },
   } = useTypedSelector((state) => state);
 
-  const transformDate = (stringDate: Date) => {
-    const data = new Date(stringDate).toLocaleDateString();
-    return data;
+  const transformDate = (stringDate: string) => {
+    const splitDate = stringDate.split("-");
+    return `${splitDate[2]}/${splitDate[1]}/${splitDate[0]}`;
   };
 
   const composeVax8Record = (
@@ -45,9 +45,12 @@ export const EmployeeCard: FC = (): JSX.Element => {
   return (
     <Stack verticalAlign="center">
       <Label styles={employeeCardLabelStyle}>
+        Country: {employee ? employee.country : ""}
+      </Label>
+      <Label styles={employeeCardLabelStyle}>
         Employee:{" "}
         {employee
-          ? `${employee.firstName} ${employee.lastName} [ No${employee.employeeNumber} ]`
+          ? `${employee.firstName} ${employee.lastName} [ No ${employee.employeeNumber} ]`
           : ""}
       </Label>
       {employee && employee.businessUnit && (

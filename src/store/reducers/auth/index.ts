@@ -1,25 +1,4 @@
-//import { IEmployee } from "../../../models/IEmployee";
 import { AuthAction, AuthActionsEnum, AuthState } from "./types";
-
-// export interface IIdentifiedEmployee  {
-
-//   firstName: string;
-//   lastName: string;
-//   employeeNumber: string;
-//   hiddenMobile: string | "";
-//   hiddenEmail:string| "";
-// }
-
-// export const initialEmployeeState = {
-//   id: 0,
-//   firstName: "",
-//   lastName: "",
-//   employeeNumber: "",
-//   email: "",
-//   mobile: "",
-//   privacyStatementConsent: false,
-//   businessUnit: "",
-// };
 
 const initialState: AuthState = {
   isAuth: false,

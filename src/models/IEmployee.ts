@@ -7,5 +7,6 @@ export interface IEmployee {
   employeeNumber: string;
   privacyStatementConsent: boolean;
   businessUnit: string;
+  country: string;
   siteVisit?: [];
 }

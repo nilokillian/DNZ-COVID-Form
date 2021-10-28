@@ -49,9 +49,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
   const [formInputs, setFormInputs] = useState<VaccinationFormState>({
     shot: ShotsOptionsEnum.ZERO,
     vaccine: null,
-    firstShotDate: null,
-    secondShotDate: null,
-    boosterDate: null,
+    firstShotDate: "",
+    secondShotDate: "",
+    boosterDate: "",
     comment: "",
     attachments: [],
   });
@@ -78,23 +78,15 @@ export const VaccinationForm: FC = (): JSX.Element => {
       dispatch(allActionCreators.setVaccinationLoading(false));
       history.push(RouteNames.SUCCESS_PAGE);
     } catch (error) {
-      if (error instanceof Vax8Error && error.statusCode === 401) {
-        logout();
-        setVaccinationRecord(null);
-        history.push(RouteNames.LOGIN_PAGE);
-      } else {
-        dispatch(
-          allActionCreators.setVaccinationError({
-            [formMode === VaccinationFormModeEnum.NEW
-              ? ErrorKeyEnum.CREATE_VACCINATION
-              : ErrorKeyEnum.UPDATE_VACCINATION]: `${
-              formMode === VaccinationFormModeEnum.NEW
-                ? "Creating "
-                : "Updating "
-            }vaccination record failed`,
-          })
-        );
-      }
+      dispatch(
+        allActionCreators.setVaccinationError({
+          [formMode === VaccinationFormModeEnum.NEW
+            ? ErrorKeyEnum.CREATE_VACCINATION
+            : ErrorKeyEnum.UPDATE_VACCINATION]: `${
+            formMode === VaccinationFormModeEnum.NEW ? "Creating " : "Updating "
+          }vaccination record failed`,
+        })
+      );
     }
   };
 
@@ -102,7 +94,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
     setFormInputs({ ...formInputs, [id]: value });
   };
 
-  const onDateChange = (id: string, value: Date) => {
+  const onDateChange = (id: string, value: string) => {
     setFormInputs({ ...formInputs, [id]: value });
   };
 
@@ -120,6 +112,8 @@ export const VaccinationForm: FC = (): JSX.Element => {
     }));
   };
 
+  const defaultDate = (): string => new Date().toLocaleString().split(",")[0];
+
   // get existing vax8 record
   useEffect(() => {
     if (employee)
@@ -132,45 +126,45 @@ export const VaccinationForm: FC = (): JSX.Element => {
       case ShotsOptionsEnum.ONE:
         setFormInputs({
           ...formInputs,
-          firstShotDate: new Date(),
+          firstShotDate: defaultDate(),
           secondShotDate: vaccinationRecord
             ? vaccinationRecord.secondShotDate
-            : null,
-          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : null,
+            : "",
+          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : "",
         });
         break;
       case ShotsOptionsEnum.TWO:
         setFormInputs({
           ...formInputs,
-          secondShotDate: new Date(),
+          secondShotDate: defaultDate(),
           firstShotDate: vaccinationRecord
             ? vaccinationRecord.firstShotDate
-            : null,
-          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : null,
+            : "",
+          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : "",
         });
         break;
       case ShotsOptionsEnum.BOOSTER:
         setFormInputs({
           ...formInputs,
-          boosterDate: new Date(),
+          boosterDate: defaultDate(),
           firstShotDate: vaccinationRecord
             ? vaccinationRecord.firstShotDate
-            : null,
+            : "",
           secondShotDate: vaccinationRecord
             ? vaccinationRecord.secondShotDate
-            : null,
+            : "",
         });
         break;
       default:
         setFormInputs({
           ...formInputs,
-          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : null,
+          boosterDate: vaccinationRecord ? vaccinationRecord.boosterDate : "",
           firstShotDate: vaccinationRecord
             ? vaccinationRecord.firstShotDate
-            : null,
+            : "",
           secondShotDate: vaccinationRecord
             ? vaccinationRecord.secondShotDate
-            : null,
+            : "",
         });
         break;
     }
@@ -182,7 +176,6 @@ export const VaccinationForm: FC = (): JSX.Element => {
       const toState: IVaccinationRecord = {
         shot: vaccinationRecord.shot,
         vaccine: vaccinationRecord.vaccine,
-        // vaccine: vaccinationRecord.vaccine === null ? "": vaccinationRecord.vaccine,
         firstShotDate: vaccinationRecord.firstShotDate,
         secondShotDate: vaccinationRecord.secondShotDate,
         boosterDate: vaccinationRecord.boosterDate,
@@ -223,7 +216,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
           <CalendarInput
             id="firstShotDate"
             value={
-              formInputs.firstShotDate ? formInputs.firstShotDate : new Date()
+              formInputs.firstShotDate
+                ? formInputs.firstShotDate
+                : defaultDate()
             }
             onChange={onDateChange}
             label="First shot date"
@@ -235,7 +230,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
           <CalendarInput
             id="secondShotDate"
             value={
-              formInputs.secondShotDate ? formInputs.secondShotDate : new Date()
+              formInputs.secondShotDate
+                ? formInputs.secondShotDate
+                : defaultDate()
             }
             onChange={onDateChange}
             label="Second shot date"
@@ -245,7 +242,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
         {formInputs.shot === ShotsOptionsEnum.BOOSTER && (
           <CalendarInput
             id="boosterDate"
-            value={formInputs.boosterDate ? formInputs.boosterDate : new Date()}
+            value={
+              formInputs.boosterDate ? formInputs.boosterDate : defaultDate()
+            }
             onChange={onDateChange}
             label="Booster date"
             required

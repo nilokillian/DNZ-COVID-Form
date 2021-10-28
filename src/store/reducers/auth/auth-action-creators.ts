@@ -85,6 +85,7 @@ export const AuthActionCreators = {
             businessUnit: response.data.employee.businessUnit,
             privacyStatementConsent:
               response.data.employee.privacyStatementConsent,
+            country: response.data.employee.country,
           })
         );
 
