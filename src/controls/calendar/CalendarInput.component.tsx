@@ -29,7 +29,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
       (date: Date | null | undefined): void => {
         if (date && date !== null) {
           const splitDate = date.toLocaleString().split(",")[0].split("/");
-          const stringDate = `${splitDate[2]}/${splitDate[0]}/${splitDate[1]}`;
+          const stringDate = `${splitDate[2]}-${splitDate[0]}-${splitDate[1]}`;
           setSelectedDate(date);
           onChange(id, stringDate);
         }
