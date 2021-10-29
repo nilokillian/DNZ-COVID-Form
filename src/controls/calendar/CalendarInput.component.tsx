@@ -28,11 +28,17 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
     const onDateChage = useCallback(
       (date: Date | null | undefined): void => {
         if (date && date !== null) {
-          const splitDate = date.toLocaleString().split(",")[0].split("/");
-          const stringDate =
+          const result = date.toLocaleDateString("en-GB", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          });
+
+          const splitDate = result.split("/");
+          const ISODate =
             splitDate[2] + "-" + splitDate[0] + "-" + splitDate[1];
           setSelectedDate(date);
-          onChange(id, stringDate);
+          onChange(id, ISODate);
         }
       },
       [onChange, id]

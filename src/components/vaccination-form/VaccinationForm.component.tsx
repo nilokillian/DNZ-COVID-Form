@@ -28,18 +28,16 @@ import {
   ShotsOptionsEnum,
   VaccinationFormModeEnum,
 } from "../../store/reducers/vaccination/types";
-import VaccinationService, { Vax8Error } from "../../api/vaccination.service";
+import VaccinationService from "../../api/vaccination.service";
 import { ErrorKeyEnum } from "../../models/IError";
 import { VaccinationFormState } from "../../models/IVaccinationFormState";
 import { useHistory } from "react-router-dom";
 import { RouteNames } from "../../routes";
 import { VaccineSelection } from "../VaccineSelection.component";
-import { useAction } from "../../hooks/useAction";
 
 export const VaccinationForm: FC = (): JSX.Element => {
   const dispatch = useDispatch();
   const history = useHistory();
-  const { logout, setVaccinationRecord } = useAction();
 
   const {
     vaccination: { isLoading, formMode, error, vaccinationRecord },
