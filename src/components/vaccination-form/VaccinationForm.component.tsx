@@ -112,7 +112,11 @@ export const VaccinationForm: FC = (): JSX.Element => {
     }));
   };
 
-  const defaultDate = (): string => new Date().toLocaleString().split(",")[0];
+  const defaultDate = (): string => {
+    const dateSplit = new Date().toLocaleString().split(",")[0].split("/");
+
+    return dateSplit[2] + "-" + dateSplit[0] + "-" + dateSplit[1];
+  };
 
   // get existing vax8 record
   useEffect(() => {
