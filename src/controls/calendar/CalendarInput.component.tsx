@@ -36,7 +36,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
 
           const splitDate = result.split("/");
           const ISODate =
-            splitDate[2] + "-" + splitDate[0] + "-" + splitDate[1];
+            splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
           setSelectedDate(date);
           onChange(id, ISODate);
         }
