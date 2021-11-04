@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { Label, ActionButton, Stack } from "@fluentui/react";
+import { Label, ActionButton, Stack, Text } from "@fluentui/react";
 import "./fileInput.css";
 import { icon } from "../../utils/iconsUtil";
 
@@ -8,6 +8,7 @@ export interface IFileInputProps {
   inputLabel?: string;
   name: string;
   disabled?: boolean;
+  required?: boolean;
   onChange: (id: string, selectedFile: string) => void;
 }
 
@@ -16,6 +17,7 @@ export const FileInput: FC<IFileInputProps> = ({
   name,
   onChange,
   disabled,
+  required,
 }): JSX.Element => {
   const innerRef = useRef<HTMLInputElement>(null);
 
@@ -98,7 +100,6 @@ export const FileInput: FC<IFileInputProps> = ({
         name={`${name}[]`}
         id={name}
         className={getInputClass()}
-        // data-multiple-caption="{count} files selected"
         accept=".jpg, .png, .pdf, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
       />
 
@@ -116,6 +117,13 @@ export const FileInput: FC<IFileInputProps> = ({
           Upload
         </ActionButton>
       </Stack>
+      {required && (
+        <Label
+          styles={{ root: { marginTop: 10, fontSize: 13, fontWeight: 400 } }}
+        >
+          NOTE: File attachment is mandatory
+        </Label>
+      )}
     </div>
   );
 };

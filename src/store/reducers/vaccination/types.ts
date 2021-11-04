@@ -24,6 +24,7 @@ export enum Vaccine {
   ASTRAZENECA = "Astrazeneca",
   PFIZER = "Pfizer",
   MODERNA = "Moderna",
+  OTHER = "Other",
 }
 
 export interface IAttachment {
@@ -35,6 +36,9 @@ export interface IAttachment {
 export interface IVaccinationRecord {
   shot: ShotsOptionsEnum;
   vaccine: Vaccine | null;
+  preferredEmail: string;
+  DOB: string | null;
+  vaccineNameOther: string;
   firstShotDate: string;
   secondShotDate: string;
   boosterDate: string;

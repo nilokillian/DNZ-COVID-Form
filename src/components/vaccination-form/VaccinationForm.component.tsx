@@ -9,6 +9,7 @@ import {
   MessageBar,
   MessageBarType,
   Text,
+  TextField,
 } from "@fluentui/react";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
@@ -27,6 +28,7 @@ import {
   IVaccinationRecord,
   ShotsOptionsEnum,
   VaccinationFormModeEnum,
+  Vaccine,
 } from "../../store/reducers/vaccination/types";
 import VaccinationService from "../../api/vaccination.service";
 import { ErrorKeyEnum } from "../../models/IError";
@@ -47,6 +49,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
   const [formInputs, setFormInputs] = useState<VaccinationFormState>({
     shot: ShotsOptionsEnum.ZERO,
     vaccine: null,
+    preferredEmail: "",
+    vaccineNameOther: "",
+    DOB: "",
     firstShotDate: "",
     secondShotDate: "",
     boosterDate: "",
@@ -111,9 +116,16 @@ export const VaccinationForm: FC = (): JSX.Element => {
   };
 
   const defaultDate = (): string => {
-    const dateSplit = new Date().toLocaleString().split(",")[0].split("/");
+    // const dateSplit = new Date().toLocaleString().split(",")[0].split("/");
+    const result = new Date()
+      .toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .split("/");
 
-    return dateSplit[2] + "-" + dateSplit[0] + "-" + dateSplit[1];
+    return result[2] + "-" + result[0] + "-" + result[1];
   };
 
   // get existing vax8 record
@@ -128,7 +140,10 @@ export const VaccinationForm: FC = (): JSX.Element => {
       case ShotsOptionsEnum.ONE:
         setFormInputs({
           ...formInputs,
-          firstShotDate: defaultDate(),
+          firstShotDate:
+            vaccinationRecord && vaccinationRecord.firstShotDate
+              ? vaccinationRecord.firstShotDate
+              : defaultDate(),
           secondShotDate: vaccinationRecord
             ? vaccinationRecord.secondShotDate
             : "",
@@ -138,7 +153,10 @@ export const VaccinationForm: FC = (): JSX.Element => {
       case ShotsOptionsEnum.TWO:
         setFormInputs({
           ...formInputs,
-          secondShotDate: defaultDate(),
+          secondShotDate:
+            vaccinationRecord && vaccinationRecord.secondShotDate
+              ? vaccinationRecord.secondShotDate
+              : defaultDate(),
           firstShotDate: vaccinationRecord
             ? vaccinationRecord.firstShotDate
             : "",
@@ -148,7 +166,10 @@ export const VaccinationForm: FC = (): JSX.Element => {
       case ShotsOptionsEnum.BOOSTER:
         setFormInputs({
           ...formInputs,
-          boosterDate: defaultDate(),
+          boosterDate:
+            vaccinationRecord && vaccinationRecord.boosterDate
+              ? vaccinationRecord.boosterDate
+              : defaultDate(),
           firstShotDate: vaccinationRecord
             ? vaccinationRecord.firstShotDate
             : "",
@@ -182,6 +203,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
         secondShotDate: vaccinationRecord.secondShotDate,
         boosterDate: vaccinationRecord.boosterDate,
         comment: vaccinationRecord.comment,
+        preferredEmail: vaccinationRecord.preferredEmail,
+        vaccineNameOther: vaccinationRecord.vaccineNameOther,
+        DOB: vaccinationRecord.DOB,
         attachments: [],
       };
 
@@ -194,6 +218,30 @@ export const VaccinationForm: FC = (): JSX.Element => {
       <Stack verticalAlign="start" styles={vaccinationFormContainerStyle}>
         <EmployeeCard />
         <Separator />
+
+        {employee && employee.country === "NZ" && (
+          <>
+            <TextField
+              label="Preferred email"
+              value={formInputs.preferredEmail}
+              required
+              onChange={(e: any) =>
+                onInputChange("preferredEmail", e.target.value)
+              }
+              disabled={
+                vaccinationRecord !== null && !!vaccinationRecord.preferredEmail
+              }
+            />
+            <CalendarInput
+              id="DOB"
+              value={formInputs.DOB ? formInputs.DOB : defaultDate()}
+              onChange={onDateChange}
+              label="Date of birth"
+              required
+            />
+          </>
+        )}
+
         <VaccinateStatusSelection
           id="shot"
           label="Your current vaccination status"
@@ -203,15 +251,33 @@ export const VaccinationForm: FC = (): JSX.Element => {
         />
         {formInputs.shot !== ShotsOptionsEnum.EXEMPTION &&
           formInputs.shot !== ShotsOptionsEnum.ZERO && (
-            <VaccineSelection
-              id="vaccine"
-              label="Vaccine"
-              value={formInputs.vaccine}
-              onChange={onInputChange}
-              isDisabled={
-                vaccinationRecord !== null && !!vaccinationRecord.vaccine
-              }
-            />
+            <>
+              <VaccineSelection
+                id="vaccine"
+                label="Vaccine"
+                value={formInputs.vaccine}
+                onChange={onInputChange}
+                country={employee ? employee.country : ""}
+                isDisabled={
+                  vaccinationRecord !== null && !!vaccinationRecord.vaccine
+                }
+              />
+              {formInputs.vaccine === Vaccine.OTHER && (
+                <TextField
+                  label="Specify vaccine name"
+                  value={
+                    formInputs.vaccineNameOther
+                      ? formInputs.vaccineNameOther
+                      : ""
+                  }
+                  required
+                  disabled={!!formInputs.vaccineNameOther}
+                  onChange={(e: any) =>
+                    onInputChange("vaccineNameOther", e.target.value)
+                  }
+                />
+              )}
+            </>
           )}
 
         {formInputs.shot === ShotsOptionsEnum.ONE && (
@@ -263,12 +329,14 @@ export const VaccinationForm: FC = (): JSX.Element => {
           style={{ marginLeft: 1 }}
         />
         <Stack styles={{ root: { minHeight: 20 } }} />
+
         <FileInput
           id="attachments"
           inputLabel="Add attachments (vaccine certificate, cards, medical exemption certificates etc)"
           onChange={onAttachmentChange}
           name="attachments"
           disabled={isLoading}
+          required={employee && employee.country === "AU"}
         />
         <DisplayAttachment
           data={formInputs.attachments}
