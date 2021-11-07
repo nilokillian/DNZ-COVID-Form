@@ -4,16 +4,18 @@ import { DatePicker, defaultCalendarStrings, Label } from "@fluentui/react";
 export interface ICalendarInputProps {
   id: string;
   label: string;
-  value: string;
+  value: string | null;
   required: boolean;
   onChange: (id: string, value: string) => void;
 }
 
 export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
   ({ id, label, value, onChange, required }) => {
-    const [selectedDate, setSelectedDate] = React.useState<Date>(() =>
-      value ? new Date(value) : new Date()
-    );
+    // const [selectedDate, setSelectedDate] = React.useState<Date>(() =>
+    //   value ? new Date(value) : new Date()
+    // );
+
+    const [selectedDate, setSelectedDate] = React.useState<Date>();
 
     const onFormatDate = (date?: Date): string => {
       return !date

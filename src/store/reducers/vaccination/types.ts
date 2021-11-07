@@ -36,7 +36,7 @@ export interface IAttachment {
 export interface IVaccinationRecord {
   shot: ShotsOptionsEnum;
   vaccine: Vaccine | null;
-  preferredEmail: string;
+  preferredEmail: string | null;
   DOB: string | null;
   vaccineNameOther: string;
   firstShotDate: string;

@@ -30,7 +30,7 @@ import {
   VaccinationFormModeEnum,
   Vaccine,
 } from "../../store/reducers/vaccination/types";
-import VaccinationService from "../../api/vaccination.service";
+import VaccinationService, { Vax8Error } from "../../api/vaccination.service";
 import { ErrorKeyEnum } from "../../models/IError";
 import { VaccinationFormState } from "../../models/IVaccinationFormState";
 import { useHistory } from "react-router-dom";
@@ -49,9 +49,9 @@ export const VaccinationForm: FC = (): JSX.Element => {
   const [formInputs, setFormInputs] = useState<VaccinationFormState>({
     shot: ShotsOptionsEnum.ZERO,
     vaccine: null,
-    preferredEmail: "",
+    preferredEmail: null,
     vaccineNameOther: "",
-    DOB: "",
+    DOB: null,
     firstShotDate: "",
     secondShotDate: "",
     boosterDate: "",
@@ -81,13 +81,21 @@ export const VaccinationForm: FC = (): JSX.Element => {
       dispatch(allActionCreators.setVaccinationLoading(false));
       history.push(RouteNames.SUCCESS_PAGE);
     } catch (error) {
+      let errorMsg = `${
+        formMode === VaccinationFormModeEnum.NEW ? "Creating " : "Updating "
+      }vaccination record failed`;
+
+      if (error instanceof Vax8Error) {
+        errorMsg = `${
+          formMode === VaccinationFormModeEnum.NEW ? "Creating " : "Updating "
+        }vaccination record failed : ${error.message}`;
+      }
+
       dispatch(
         allActionCreators.setVaccinationError({
           [formMode === VaccinationFormModeEnum.NEW
             ? ErrorKeyEnum.CREATE_VACCINATION
-            : ErrorKeyEnum.UPDATE_VACCINATION]: `${
-            formMode === VaccinationFormModeEnum.NEW ? "Creating " : "Updating "
-          }vaccination record failed`,
+            : ErrorKeyEnum.UPDATE_VACCINATION]: errorMsg,
         })
       );
     }
@@ -223,7 +231,11 @@ export const VaccinationForm: FC = (): JSX.Element => {
           <>
             <TextField
               label="Preferred email"
-              value={formInputs.preferredEmail}
+              value={
+                formInputs.preferredEmail !== null
+                  ? formInputs.preferredEmail
+                  : ""
+              }
               required
               onChange={(e: any) =>
                 onInputChange("preferredEmail", e.target.value)
@@ -234,7 +246,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
             />
             <CalendarInput
               id="DOB"
-              value={formInputs.DOB ? formInputs.DOB : defaultDate()}
+              value={formInputs.DOB}
               onChange={onDateChange}
               label="Date of birth"
               required
@@ -271,7 +283,10 @@ export const VaccinationForm: FC = (): JSX.Element => {
                       : ""
                   }
                   required
-                  disabled={!!formInputs.vaccineNameOther}
+                  disabled={
+                    vaccinationRecord !== null &&
+                    !!vaccinationRecord.vaccineNameOther
+                  }
                   onChange={(e: any) =>
                     onInputChange("vaccineNameOther", e.target.value)
                   }
