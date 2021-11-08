@@ -83,12 +83,14 @@ export const VaccinationForm: FC = (): JSX.Element => {
     } catch (error) {
       let errorMsg = `${
         formMode === VaccinationFormModeEnum.NEW ? "Creating " : "Updating "
-      }vaccination record failed`;
+      }vaccination record failed : [error]`;
 
       if (error instanceof Vax8Error) {
         errorMsg = `${
           formMode === VaccinationFormModeEnum.NEW ? "Creating " : "Updating "
-        }vaccination record failed : ${error.message}`;
+        }vaccination record failed : ${
+          error.message ? error.message : "[vax-n-8 error]"
+        }`;
       }
 
       dispatch(
@@ -107,6 +109,20 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   const onDateChange = (id: string, value: string) => {
     setFormInputs({ ...formInputs, [id]: value });
+  };
+
+  const isSubmitDisabled = () => {
+    if (formMode === VaccinationFormModeEnum.NEW) {
+      if (employee && employee.country === "AU") {
+        return formInputs.attachments.length < 1 || isLoading;
+      } else {
+        return isLoading;
+      }
+    } else if (formMode === VaccinationFormModeEnum.EDIT) {
+      return isLoading;
+    } else {
+      return false;
+    }
   };
 
   const onAttachmentChange = (name: string, file: string) => {
@@ -379,7 +395,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
         <Stack horizontal horizontalAlign="start" tokens={{ childrenGap: 5 }}>
           <PrimaryButton
             text={isLoading ? "Submitting" : "Submit"}
-            disabled={isLoading}
+            disabled={isSubmitDisabled()}
             onClick={submitForm}
             styles={submitFromBtnStyle}
           />

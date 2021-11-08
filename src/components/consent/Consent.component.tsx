@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import { MessageBarType, Text, Link, MessageBar } from "@fluentui/react";
-import { privacyHeader } from "../../const/strings";
+import { privacyHeaderAU, privacyHeaderNZ } from "../../const/strings";
 import { ModalWindow } from "../modal/Modal.component";
 import { PrivacyStatement } from "../privacy-statement/PrivacyStatement.component";
 import { useTypedSelector } from "../../hooks/useTypedSelector";
@@ -58,8 +58,11 @@ export const EmployeeConsent: FC = (): JSX.Element => {
       >
         <div>
           <Text variant="smallPlus">
-            {privacyHeader} The information that we will collect, and how we
-            will use, handle and store it.
+            {employee && employee.country === "AU"
+              ? privacyHeaderAU
+              : privacyHeaderNZ}{" "}
+            The information that we will collect, and how we will use, handle
+            and store it.
           </Text>
           <p />
           <Text variant="smallPlus">
@@ -83,6 +86,7 @@ export const EmployeeConsent: FC = (): JSX.Element => {
         isBlocking={true}
       >
         <PrivacyStatement
+          country={employee && employee.country ? employee.country : ""}
           onAgree={() => {
             setPrivacyStatementModal(false);
             setPrivacyConsent(true);

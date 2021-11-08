@@ -1,6 +1,6 @@
 import { initializeIcons } from "@fluentui/font-icons-mdl2";
 import Header from "./components/header/Header.component";
-import { headerTitle, helpEmail } from "./const/strings";
+import { headerTitle } from "./const/strings";
 import { AppRouter } from "./components/AppRouter";
 import "./App.css";
 

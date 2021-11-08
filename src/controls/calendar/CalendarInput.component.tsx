@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { DatePicker, defaultCalendarStrings, Label } from "@fluentui/react";
 
 export interface ICalendarInputProps {
@@ -45,6 +45,12 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
       },
       [onChange, id]
     );
+
+    useEffect(() => {
+      if (value) {
+        setSelectedDate(new Date(value));
+      }
+    }, [value]);
 
     return (
       <div

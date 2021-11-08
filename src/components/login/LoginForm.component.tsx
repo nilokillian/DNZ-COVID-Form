@@ -22,7 +22,7 @@ import {
   helpEmailStyle,
   loginBtnStyle,
 } from "./LoginFormObjectStyles";
-import { helpEmail } from "../../const/strings";
+import { helpEmailAU, helpEmailNZ } from "../../const/strings";
 import { LoadingSpinner } from "../loading-spinner/LoadingSpinner.component";
 
 const initLoginState = {
@@ -143,7 +143,12 @@ export const LoginForm: FC = memo(() => {
         horizontalAlign="end"
         styles={{ root: { paddingTop: 20 } }}
       >
-        <Link href={helpEmail} styles={helpEmailStyle}>
+        <Link
+          href={
+            employee && employee?.country === "AU" ? helpEmailAU : helpEmailNZ
+          }
+          styles={helpEmailStyle}
+        >
           @ Need help ?
         </Link>
       </Stack>

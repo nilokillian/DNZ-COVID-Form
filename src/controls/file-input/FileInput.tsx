@@ -117,6 +117,13 @@ export const FileInput: FC<IFileInputProps> = ({
           Upload
         </ActionButton>
       </Stack>
+      <Label
+        styles={{
+          root: { marginLeft: 5, fontSize: 10, fontWeight: 400 },
+        }}
+      >
+        {"Click on UPLOAD to add a selected file to the form".toUpperCase()}
+      </Label>
       {required && (
         <Label
           styles={{ root: { marginTop: 10, fontSize: 13, fontWeight: 400 } }}
