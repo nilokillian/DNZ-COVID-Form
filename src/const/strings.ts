@@ -68,6 +68,7 @@ export const privacyStatementHtmlAU = `<p style="text-align: center;"><strong><s
 <p style="text-align: center;"><span data-contrast="auto"><span data-ccp-parastyle="Body Text">This Privacy&nbsp;</span><span data-ccp-parastyle="Body Text">Statement&nbsp;</span><span data-ccp-parastyle="Body Text">provides specific information about the handling of personal information in</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">relation to an individual&rsquo;s COVID-19&nbsp;</span><span data-ccp-parastyle="Body Text">s</span><span data-ccp-parastyle="Body Text">tatus only. For more information about the way</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">Downer&nbsp;</span><span data-ccp-parastyle="Body Text">generally</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">handles personal</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">information,</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">see</span><span data-ccp-parastyle="Body Text">&nbsp;</span><span data-ccp-parastyle="Body Text">our&nbsp;</span><span data-ccp-parastyle="Body Text">Privacy Policy</span></span><span data-ccp-props="{&quot;335559685&quot;:101,&quot;335559737&quot;:604,&quot;335559738&quot;:93}">&nbsp;</span></p>`;
 export const privacyStatementHtmlNZ = `<p>
 <strong>The purpose of collecting this information</strong>
+<br/>
 </p>
 <p>
 We are required to comply with our obligations under:
@@ -272,7 +273,12 @@ much information as possible so we can investigate and respond.
 A complaint can also be made to Downer’s Privacy Officer.
 </p>
 <p>
-If you are not satisfied with our response, you can contact the    <em>Office of the Privacy Commissioner</em> [create link]
+If you are not satisfied with our response, you can contact the
+<em>
+    <a href="https://www.privacy.org.nz/">
+        Office of the Privacy Commissioner
+    </a>
+</em>
 </p>
 <p>
 This Privacy Statement provides specific information about the handling of

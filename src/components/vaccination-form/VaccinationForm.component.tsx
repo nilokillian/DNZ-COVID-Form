@@ -116,7 +116,13 @@ export const VaccinationForm: FC = (): JSX.Element => {
       if (employee && employee.country === "AU") {
         return formInputs.attachments.length < 1 || isLoading;
       } else {
-        return isLoading;
+        return (
+          isLoading ||
+          formInputs.DOB === null ||
+          formInputs.preferredEmail === null ||
+          !formInputs.DOB ||
+          !formInputs.preferredEmail
+        );
       }
     } else if (formMode === VaccinationFormModeEnum.EDIT) {
       return isLoading;

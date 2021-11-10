@@ -143,13 +143,11 @@ export const LoginForm: FC = memo(() => {
         horizontalAlign="end"
         styles={{ root: { paddingTop: 20 } }}
       >
-        <Link
-          href={
-            employee && employee?.country === "AU" ? helpEmailAU : helpEmailNZ
-          }
-          styles={helpEmailStyle}
-        >
-          @ Need help ?
+        <Link href={helpEmailAU} styles={helpEmailStyle}>
+          @ Need help I am AU
+        </Link>
+        <Link href={helpEmailNZ} styles={helpEmailStyle}>
+          @ Need help I am NZ
         </Link>
       </Stack>
     </div>
