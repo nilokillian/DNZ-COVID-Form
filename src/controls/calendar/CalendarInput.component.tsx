@@ -11,10 +11,6 @@ export interface ICalendarInputProps {
 
 export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
   ({ id, label, value, onChange, required }) => {
-    // const [selectedDate, setSelectedDate] = React.useState<Date>(() =>
-    //   value ? new Date(value) : new Date()
-    // );
-
     const [selectedDate, setSelectedDate] = React.useState<Date>();
 
     const onFormatDate = (date?: Date): string => {
@@ -26,6 +22,31 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
             "/" +
             date.getFullYear();
     };
+
+    const onParseDateFromString = React.useCallback(
+      (newValue: string): Date => {
+        const previousValue = value ? new Date(value) : new Date();
+        const newValueParts = (newValue || "").trim().split("/");
+        const day =
+          newValueParts.length > 0
+            ? Math.max(1, Math.min(31, parseInt(newValueParts[0], 10)))
+            : previousValue.getDate();
+        const month =
+          newValueParts.length > 1
+            ? Math.max(1, Math.min(12, parseInt(newValueParts[1], 10))) - 1
+            : previousValue.getMonth();
+        let year =
+          newValueParts.length > 2
+            ? parseInt(newValueParts[2], 10)
+            : previousValue.getFullYear();
+        if (year < 100) {
+          year +=
+            previousValue.getFullYear() - (previousValue.getFullYear() % 100);
+        }
+        return new Date(year, month, day);
+      },
+      [value]
+    );
 
     const onDateChage = useCallback(
       (date: Date | null | undefined): void => {
@@ -63,8 +84,10 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
         <DatePicker
           onSelectDate={onDateChage}
           value={selectedDate}
-          strings={defaultCalendarStrings}
+          allowTextInput
           formatDate={onFormatDate}
+          parseDateFromString={onParseDateFromString}
+          strings={defaultCalendarStrings}
           styles={{ root: { width: "auto" } }}
         />
       </div>
