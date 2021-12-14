@@ -373,7 +373,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
           onChange={onAttachmentChange}
           name="attachments"
           disabled={isLoading}
-          required={employee && employee.country === "AU"}
+          required={true}
         />
         <DisplayAttachment
           data={formInputs.attachments}
