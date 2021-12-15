@@ -113,17 +113,14 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
   const isSubmitDisabled = () => {
     if (formMode === VaccinationFormModeEnum.NEW) {
-      if (employee && employee.country === "AU") {
-        return formInputs.attachments.length < 1 || isLoading;
-      } else {
-        return (
-          isLoading ||
-          formInputs.DOB === null ||
-          formInputs.preferredEmail === null ||
-          !formInputs.DOB ||
-          !formInputs.preferredEmail
-        );
-      }
+      return (
+        isLoading ||
+        formInputs.DOB === null ||
+        formInputs.preferredEmail === null ||
+        !formInputs.DOB ||
+        !formInputs.preferredEmail ||
+        formInputs.attachments.length < 1
+      );
     } else if (formMode === VaccinationFormModeEnum.EDIT) {
       return isLoading;
     } else {
