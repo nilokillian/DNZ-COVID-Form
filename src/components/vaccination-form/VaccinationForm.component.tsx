@@ -124,6 +124,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
     } else if (formMode === VaccinationFormModeEnum.EDIT) {
       return (
         isLoading ||
+        vaccinationRecord == null ||
         (vaccinationRecord.attachments.length < 1 &&
           formInputs.attachments.length < 1)
       );
