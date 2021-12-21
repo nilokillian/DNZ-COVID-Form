@@ -122,7 +122,11 @@ export const VaccinationForm: FC = (): JSX.Element => {
         formInputs.attachments.length < 1
       );
     } else if (formMode === VaccinationFormModeEnum.EDIT) {
-      return isLoading || formInputs.attachments.length < 1;
+      return (
+        isLoading ||
+        (vaccinationRecord.attachments.length < 1 &&
+          formInputs.attachments.length < 1)
+      );
     } else {
       return false;
     }
