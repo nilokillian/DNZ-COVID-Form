@@ -60,6 +60,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
           const splitDate = result.split("/");
           const ISODate =
             splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+
           setSelectedDate(date);
           onChange(id, ISODate);
         }
@@ -68,9 +69,7 @@ export const CalendarInput: React.FC<ICalendarInputProps> = React.memo(
     );
 
     useEffect(() => {
-      if (value) {
-        setSelectedDate(new Date(value));
-      }
+      setSelectedDate(value ? new Date(value) : new Date());
     }, [value]);
 
     return (

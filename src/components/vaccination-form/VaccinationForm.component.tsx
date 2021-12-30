@@ -111,16 +111,25 @@ export const VaccinationForm: FC = (): JSX.Element => {
     setFormInputs({ ...formInputs, [id]: value });
   };
 
-  const isSubmitDisabled = () => {
+  const isSubmitDisabled = (country: string) => {
     if (formMode === VaccinationFormModeEnum.NEW) {
-      return (
-        isLoading ||
-        formInputs.DOB === null ||
-        formInputs.preferredEmail === null ||
-        !formInputs.DOB ||
-        !formInputs.preferredEmail ||
-        formInputs.attachments.length < 1
-      );
+      switch (country) {
+        case "NZ":
+          return (
+            isLoading ||
+            formInputs.DOB === null ||
+            formInputs.preferredEmail === null ||
+            !formInputs.DOB ||
+            !formInputs.preferredEmail ||
+            formInputs.attachments.length < 1
+          );
+
+        case "AU":
+          return isLoading || formInputs.attachments.length < 1;
+
+        default:
+          return false;
+      }
     } else if (formMode === VaccinationFormModeEnum.EDIT) {
       return (
         isLoading ||
@@ -157,7 +166,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
       })
       .split("/");
 
-    return result[2] + "-" + result[0] + "-" + result[1];
+    return result[2] + "-" + result[1] + "-" + result[0];
   };
 
   // get existing vax8 record
@@ -403,7 +412,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
         <Stack horizontal horizontalAlign="start" tokens={{ childrenGap: 5 }}>
           <PrimaryButton
             text={isLoading ? "Submitting" : "Submit"}
-            disabled={isSubmitDisabled()}
+            disabled={isSubmitDisabled(employee ? employee.country : "")}
             onClick={submitForm}
             styles={submitFromBtnStyle}
           />
