@@ -9,6 +9,7 @@ const options: IChoiceGroupOption[] = [
   { key: Vaccine.PFIZER, text: Vaccine.PFIZER },
   { key: Vaccine.ASTRAZENECA, text: Vaccine.ASTRAZENECA },
   { key: Vaccine.MODERNA, text: Vaccine.MODERNA },
+  { key: Vaccine.NOVAVAX, text: Vaccine.NOVAVAX },
   { key: Vaccine.OTHER, text: Vaccine.OTHER },
 ];
 
