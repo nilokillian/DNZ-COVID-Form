@@ -24,6 +24,7 @@ export enum Vaccine {
   ASTRAZENECA = "Astrazeneca",
   PFIZER = "Pfizer",
   MODERNA = "Moderna",
+  NOVAVAX = "Novavax",
   OTHER = "Other",
 }
 
