@@ -8,6 +8,16 @@ export default class AuthService {
     try {
       return await axios.post<IEmployee>(`${apiBase}/_api/auth/login`, payload);
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          throw new Error(error.response.data.message);
+        } else {
+          throw new Error(
+            "Sorry, can't login. Seems like something went wrong"
+          );
+        }
+      }
+
       throw new Error("Sorry, can't login. Seems like something went wrong");
     }
   }

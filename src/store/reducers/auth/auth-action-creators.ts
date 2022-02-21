@@ -116,10 +116,10 @@ export const AuthActionCreators = {
       dispatch(AuthActionCreators.setVarification(true));
       dispatch(AuthActionCreators.setAuthLoading(false));
     } catch (error) {
+      const errorAny: any = error;
       dispatch(
         AuthActionCreators.setAuthError({
-          [ErrorKeyEnum.GET_EMPLOYEE]:
-            "Employee with the given details was not found",
+          [ErrorKeyEnum.GET_EMPLOYEE]: errorAny.message,
         })
       );
     }
