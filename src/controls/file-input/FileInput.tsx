@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import { Label, ActionButton, Stack, Text } from "@fluentui/react";
+import { FC, useRef, useEffect, useState } from "react";
+import { Label, IconButton } from "@fluentui/react";
 import "./fileInput.css";
 import { icon } from "../../utils/iconsUtil";
 
@@ -9,7 +9,13 @@ export interface IFileInputProps {
   name: string;
   disabled?: boolean;
   required?: boolean;
-  onChange: (id: string, selectedFile: string) => void;
+  onChange: (fileName: string, fileContent: string) => void;
+  onRemove: () => void;
+}
+
+interface ISelectedFile {
+  name: string;
+  file: string;
 }
 
 export const FileInput: FC<IFileInputProps> = ({
@@ -17,113 +23,63 @@ export const FileInput: FC<IFileInputProps> = ({
   name,
   onChange,
   disabled,
+  onRemove,
   required,
 }): JSX.Element => {
   const innerRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<ISelectedFile | "">();
 
-  const [inputKey, setInputKey] = useState(() => Math.random().toString(36));
+  const onFileSelected = async () => {
+    if (innerRef.current && innerRef.current.files) {
+      if (innerRef.current.files.length < 1) {
+        setSelectedFile("");
+        onRemove();
+      } else {
+        const currentSelection = innerRef.current.files[0];
 
-  const [fileSelected, setFileSelected] = useState(false);
+        if (currentSelection) {
+          const base64 = await readFile(currentSelection);
 
-  useEffect(() => {
-    const curentRef = innerRef.current;
-    if (curentRef && curentRef.files) {
-      const addFileToSpan = () => {
-        if (curentRef && curentRef.files && curentRef.files.length > 0) {
-          const label = curentRef.nextElementSibling;
-          const fileName = curentRef.files[0].name;
-
-          if (fileName && label) {
-            const fileNameSpan = label.querySelector("span");
-            if (fileNameSpan) {
-              fileNameSpan.innerHTML = fileName;
-            }
-          }
+          setSelectedFile({
+            name: innerRef.current.files[0].name,
+            file: base64,
+          });
+          onChange(innerRef.current.files[0].name, base64);
         }
-      };
-
-      curentRef.addEventListener("change", addFileToSpan);
-
-      return () => {
-        curentRef.removeEventListener("change", addFileToSpan);
-      };
-    }
-  }, [innerRef, inputKey]);
-
-  const onFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isSelected = e.target.files && e.target.files.length < 1;
-    const curentRef = innerRef.current;
-    if (curentRef && e.target && e.target.files && e.target.files.length < 1) {
-      const label = curentRef.nextElementSibling;
-
-      if (label) {
-        const fileNameSpan = label.querySelector("span");
-        if (fileNameSpan) fileNameSpan.innerHTML = "";
       }
     }
-
-    setFileSelected(!isSelected);
   };
 
   const clearInput = async () => {
-    if (innerRef.current && innerRef.current.files) {
-      const selectedFile = innerRef.current.files[0];
-      const randomString = Math.random().toString(36);
-      const curentRef = innerRef.current;
-      if (curentRef) {
-        const label = curentRef.nextElementSibling;
-        setInputKey(() => randomString);
-        if (label) {
-          const fileNameSpan = label.querySelector("span");
-          if (fileNameSpan) fileNameSpan.innerHTML = "";
-        }
-
-        const file = await readFile(selectedFile);
-        setFileSelected(false);
-        onChange(selectedFile.name, file);
-      }
+    if (innerRef.current) {
+      innerRef.current.value = "";
+      setSelectedFile("");
+      onRemove();
     }
   };
 
-  const getInputClass = () =>
-    disabled ? `inputfile inputfile6 inputDisabled` : `inputfile inputfile6`;
+  useEffect(() => {}, []);
 
   return (
     <div className="inputFileContainer">
-      {inputLabel && <Label>{inputLabel}</Label>}
-
+      {inputLabel && <Label required={required}>{inputLabel}</Label>}
       <input
-        key={inputKey}
+        // key={inputKey}
         ref={innerRef}
-        onChange={(e) => onFileSelect(e)}
         type="file"
-        name={`${name}[]`}
         id={name}
-        className={getInputClass()}
+        onChange={onFileSelected}
         accept=".jpg, .png, .pdf, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
       />
-
-      <Stack horizontal>
-        <label htmlFor={name} className="file-name-contailer">
-          <span className="file-name"></span>
-        </label>
-        <ActionButton
-          iconProps={icon.save}
-          styles={{ icon: { fontSize: 25 }, root: { height: 30 } }}
-          allowDisabledFocus
-          disabled={!fileSelected}
+      {selectedFile && (
+        <IconButton
+          iconProps={icon.cancel}
+          title="clear"
+          ariaLabel="Clear"
           onClick={clearInput}
-        >
-          Upload
-        </ActionButton>
-      </Stack>
-      <Label
-        styles={{
-          root: { marginLeft: 5, fontSize: 10, fontWeight: 400 },
-        }}
-      >
-        {"Click on UPLOAD to add a selected file to the form".toUpperCase()}
-      </Label>
+        />
+      )}
+
       {required && (
         <Label
           styles={{ root: { marginTop: 10, fontSize: 13, fontWeight: 400 } }}
