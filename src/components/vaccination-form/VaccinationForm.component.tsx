@@ -22,7 +22,6 @@ import {
   submitFromBtnStyle,
   vaccinationFormContainerStyle,
 } from "./VaccinationFormStyledObjects";
-import { DisplayAttachment } from "../display-attachment/DisplayAttachment.component";
 import { allActionCreators } from "../../store/reducers/action-creators";
 import {
   IVaccinationRecord,
@@ -145,14 +144,14 @@ export const VaccinationForm: FC = (): JSX.Element => {
   const onAttachmentChange = (name: string, file: string) => {
     setFormInputs((prev) => ({
       ...prev,
-      attachments: [...prev.attachments, { name, file }],
+      attachments: [{ name, file }],
     }));
   };
 
-  const onAttachmentRemove = (name: string) => {
+  const onAttachmentRemove = () => {
     setFormInputs((prev) => ({
       ...prev,
-      attachments: [...prev.attachments.filter((att) => att.name !== name)],
+      attachments: [],
     }));
   };
 
@@ -380,16 +379,17 @@ export const VaccinationForm: FC = (): JSX.Element => {
 
         <FileInput
           id="attachments"
-          inputLabel="Add attachments (vaccine certificate, cards, medical exemption certificates etc)"
+          inputLabel="Add attachments (vaccine certificate, cards, medical exemption etc)"
           onChange={onAttachmentChange}
           name="attachments"
           disabled={isLoading}
           required={true}
-        />
-        <DisplayAttachment
-          data={formInputs.attachments}
           onRemove={onAttachmentRemove}
         />
+        {/* <DisplayAttachment
+          data={formInputs.attachments}
+          onRemove={onAttachmentRemove}
+        /> */}
 
         {error && (
           <MessageBar
