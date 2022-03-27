@@ -24,6 +24,8 @@ import {
 } from "./LoginFormObjectStyles";
 import { helpEmailAU, helpEmailNZ } from "../../const/strings";
 import { LoadingSpinner } from "../loading-spinner/LoadingSpinner.component";
+import HowToPDF from "../../how-to.pdf";
+import TroubleshootPDF from "../../troubleshoot.pdf";
 
 const initLoginState = {
   firstName: "",
@@ -138,6 +140,27 @@ export const LoginForm: FC = memo(() => {
           !employee.privacyStatementConsent && <EmployeeConsent />}
       </form>
       {isLoading && <LoadingSpinner />}
+
+      <Stack
+        horizontal
+        horizontalAlign="end"
+        styles={{ root: { paddingTop: 20 } }}
+      >
+        <Link href={TroubleshootPDF} styles={helpEmailStyle} target="_blank">
+          Log in troubleshooting
+        </Link>
+      </Stack>
+
+      <Stack
+        horizontal
+        horizontalAlign="end"
+        styles={{ root: { paddingTop: 20 } }}
+      >
+        <Link href={HowToPDF} styles={helpEmailStyle} target="_blank">
+          The how to guide for the Vaxn8 app
+        </Link>
+      </Stack>
+
       <Stack
         horizontal
         horizontalAlign="end"
