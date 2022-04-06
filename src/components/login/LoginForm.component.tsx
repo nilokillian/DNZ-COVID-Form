@@ -6,7 +6,6 @@ import {
   Text,
   MessageBar,
   Separator,
-  Link,
 } from "@fluentui/react";
 import { useState, FC, useCallback, memo } from "react";
 import { EmployeeConsent } from "../consent/Consent.component";
@@ -19,13 +18,11 @@ import { ErrorKeyEnum } from "../../models/IError";
 import {
   errorMessageStyle,
   formBodyStackStyle,
-  helpEmailStyle,
   loginBtnStyle,
 } from "./LoginFormObjectStyles";
-import { helpEmailAU, helpEmailNZ } from "../../const/strings";
 import { LoadingSpinner } from "../loading-spinner/LoadingSpinner.component";
-import HowToPDF from "../../how-to.pdf";
-import TroubleshootPDF from "../../troubleshoot.pdf";
+import NeedHelp from "../need-help/NeedHelp.component";
+import HowTo from "../how-to/HowTo.component";
 
 const initLoginState = {
   firstName: "",
@@ -41,7 +38,6 @@ export const LoginForm: FC = memo(() => {
     employee,
     error,
     verificationCodeSent,
-    isAuth,
     identified,
     token,
   } = useTypedSelector((state) => state.auth);
@@ -141,38 +137,8 @@ export const LoginForm: FC = memo(() => {
       </form>
       {isLoading && <LoadingSpinner />}
 
-      <Stack
-        horizontal
-        horizontalAlign="end"
-        styles={{ root: { paddingTop: 20 } }}
-      >
-        <Link href={TroubleshootPDF} styles={helpEmailStyle} target="_blank">
-          Log in troubleshooting
-        </Link>
-      </Stack>
-
-      <Stack
-        horizontal
-        horizontalAlign="end"
-        styles={{ root: { paddingTop: 20 } }}
-      >
-        <Link href={HowToPDF} styles={helpEmailStyle} target="_blank">
-          The how to guide for the Vaxn8 app
-        </Link>
-      </Stack>
-
-      <Stack
-        horizontal
-        horizontalAlign="end"
-        styles={{ root: { paddingTop: 20 } }}
-      >
-        <Link href={helpEmailAU} styles={helpEmailStyle}>
-          I need help, and am in AU
-        </Link>
-        <Link href={helpEmailNZ} styles={helpEmailStyle}>
-          I need help, and am in NZ
-        </Link>
-      </Stack>
+      <HowTo />
+      <NeedHelp />
     </div>
   );
 });

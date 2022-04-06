@@ -35,6 +35,7 @@ import { VaccinationFormState } from "../../models/IVaccinationFormState";
 import { useHistory } from "react-router-dom";
 import { RouteNames } from "../../routes";
 import { VaccineSelection } from "../VaccineSelection.component";
+import HowTo from "../how-to/HowTo.component";
 
 export const VaccinationForm: FC = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -390,7 +391,7 @@ export const VaccinationForm: FC = (): JSX.Element => {
           data={formInputs.attachments}
           onRemove={onAttachmentRemove}
         /> */}
-
+        {employee && employee.country === "AU" && <HowTo fromForm={true} />}
         {error && (
           <MessageBar
             messageBarType={MessageBarType.error}
